@@ -71,7 +71,9 @@ class _LoginViewState extends State<LoginView> {
                         backgroundColor: Colors.purple[300],
                         child: IconButton(
                           color: Colors.white,
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.pushNamed(context, '/homepage');
+                          },
                           icon: const Icon(Icons.arrow_forward),
                         ),
                       ),
@@ -95,7 +97,9 @@ class _LoginViewState extends State<LoginView> {
                         ),
                       ),
                       TextButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.pushNamed(context, '/homepage');
+                        },
                         child: const Text(
                           'Forgot password',
                           style: TextStyle(
