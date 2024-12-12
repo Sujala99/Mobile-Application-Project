@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobile_application_project/common/mysnackbar.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
@@ -8,13 +9,34 @@ class LoginView extends StatefulWidget {
 }
 
 class _LoginViewState extends State<LoginView> {
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
+  // Hardcoded credentials
+  final String validEmail = "admin@gmail.com";
+  final String validPassword = "admin123";
+
+  void _login() {
+    String email = _emailController.text;
+    String password = _passwordController.text;
+
+    if (email == validEmail && password == validPassword) {
+      showMySnackBar(context, "Successfully logged in!", color: Colors.green);
+      Navigator.pushNamed(context, '/homepage');
+    } else {
+      showMySnackBar(context, "Incorrect email or password.",
+          color: Colors.red);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Stack(
         children: [
           Container(
-            color: Colors.purple.withOpacity(0.5), // Semi-transparent overlay
+            color: const Color.fromARGB(255, 213, 139, 226)
+                .withOpacity(0.5), // Semi-transparent overlay
           ),
           SingleChildScrollView(
             child: Padding(
@@ -33,6 +55,7 @@ class _LoginViewState extends State<LoginView> {
                   ),
                   SizedBox(height: MediaQuery.of(context).size.height * 0.1),
                   TextField(
+                    controller: _emailController,
                     decoration: InputDecoration(
                       filled: true,
                       fillColor: Colors.grey.shade100,
@@ -44,6 +67,7 @@ class _LoginViewState extends State<LoginView> {
                   ),
                   const SizedBox(height: 30),
                   TextField(
+                    controller: _passwordController,
                     obscureText: true,
                     decoration: InputDecoration(
                       filled: true,
@@ -70,10 +94,8 @@ class _LoginViewState extends State<LoginView> {
                         radius: 30,
                         backgroundColor: Colors.purple[300],
                         child: IconButton(
-                          color: Colors.white,
-                          onPressed: () {
-                            Navigator.pushNamed(context, '/homepage');
-                          },
+                          color: Colors.black,
+                          onPressed: _login,
                           icon: const Icon(Icons.arrow_forward),
                         ),
                       ),
@@ -92,20 +114,20 @@ class _LoginViewState extends State<LoginView> {
                           style: TextStyle(
                             decoration: TextDecoration.underline,
                             fontSize: 18,
-                            color: Colors.white,
+                            color: Colors.black,
                           ),
                         ),
                       ),
                       TextButton(
                         onPressed: () {
-                          Navigator.pushNamed(context, '/homepage');
+                          Navigator.pushNamed(context, '/forgot_password');
                         },
                         child: const Text(
                           'Forgot password',
                           style: TextStyle(
                             decoration: TextDecoration.underline,
                             fontSize: 18,
-                            color: Colors.white,
+                            color: Colors.black,
                           ),
                         ),
                       ),

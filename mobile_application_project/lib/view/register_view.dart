@@ -13,16 +13,14 @@ class _RegisterViewState extends State<RegisterView> {
     return Scaffold(
       body: Stack(
         children: [
-          Container(
-            color: Colors.purple.withOpacity(0.5), // Semi-transparent overlay
-          ),
+          Container(color: const Color.fromARGB(255, 228, 190, 235)),
           SingleChildScrollView(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 35),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const SizedBox(height: 130),
+                  const SizedBox(height: 50),
                   const Text(
                     'Register ',
                     style: TextStyle(
@@ -59,7 +57,7 @@ class _RegisterViewState extends State<RegisterView> {
                     decoration: InputDecoration(
                       filled: true,
                       fillColor: Colors.grey.shade100,
-                      hintText: "Password",
+                      hintText: "Phone Number",
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),
@@ -70,7 +68,7 @@ class _RegisterViewState extends State<RegisterView> {
                     decoration: InputDecoration(
                       filled: true,
                       fillColor: Colors.grey.shade100,
-                      hintText: "Phone number",
+                      hintText: "Password",
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),
@@ -92,8 +90,10 @@ class _RegisterViewState extends State<RegisterView> {
                         radius: 30,
                         backgroundColor: Colors.purple[300],
                         child: IconButton(
-                          color: Colors.white,
-                          onPressed: () {},
+                          color: Colors.black,
+                          onPressed: () {
+                            Navigator.pushNamed(context, '/login');
+                          },
                           icon: const Icon(Icons.arrow_forward),
                         ),
                       ),
@@ -112,7 +112,7 @@ class _RegisterViewState extends State<RegisterView> {
                           style: TextStyle(
                             decoration: TextDecoration.underline,
                             fontSize: 18,
-                            color: Colors.white,
+                            color: Colors.black,
                           ),
                         ),
                       ),
