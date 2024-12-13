@@ -13,7 +13,15 @@ class _RegisterViewState extends State<RegisterView> {
     return Scaffold(
       body: Stack(
         children: [
-          Container(color: const Color.fromARGB(255, 228, 190, 235)),
+          Container(
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                colors: [Color(0xFF8B279C), Color(0xFFBB87D7)],
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+              ),
+            ),
+          ),
           SingleChildScrollView(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 35),
@@ -22,9 +30,9 @@ class _RegisterViewState extends State<RegisterView> {
                 children: [
                   const SizedBox(height: 50),
                   const Text(
-                    'Register ',
+                    'Register',
                     style: TextStyle(
-                      color: Colors.black,
+                      color: Colors.white,
                       fontSize: 33,
                       fontWeight: FontWeight.bold,
                     ),
@@ -81,7 +89,7 @@ class _RegisterViewState extends State<RegisterView> {
                       const Text(
                         "Sign up",
                         style: TextStyle(
-                          color: Colors.black54,
+                          color: Colors.white,
                           fontSize: 27,
                           fontWeight: FontWeight.w700,
                         ),
@@ -90,7 +98,7 @@ class _RegisterViewState extends State<RegisterView> {
                         radius: 30,
                         backgroundColor: Colors.purple[300],
                         child: IconButton(
-                          color: Colors.black,
+                          color: Colors.white,
                           onPressed: () {
                             Navigator.pushNamed(context, '/login');
                           },
@@ -108,25 +116,14 @@ class _RegisterViewState extends State<RegisterView> {
                           Navigator.pushNamed(context, '/login');
                         },
                         child: const Text(
-                          'login',
+                          'Login',
                           style: TextStyle(
                             decoration: TextDecoration.underline,
                             fontSize: 18,
-                            color: Colors.black,
+                            color: Colors.white,
                           ),
                         ),
                       ),
-                      // TextButton(
-                      //   onPressed: () {},
-                      //   child: const Text(
-                      //     'Forgot password',
-                      //     style: TextStyle(
-                      //       decoration: TextDecoration.underline,
-                      //       fontSize: 18,
-                      //       color: Colors.white,
-                      //     ),
-                      //   ),
-                      // ),
                     ],
                   ),
                 ],
