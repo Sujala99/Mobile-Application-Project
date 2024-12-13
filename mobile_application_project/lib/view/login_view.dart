@@ -35,8 +35,13 @@ class _LoginViewState extends State<LoginView> {
       body: Stack(
         children: [
           Container(
-            color: const Color.fromARGB(255, 213, 139, 226)
-                .withOpacity(0.5), // Semi-transparent overlay
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                colors: [Color(0xFF8B279C), Color(0xFFBB87D7)],
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+              ),
+            ),
           ),
           SingleChildScrollView(
             child: Padding(
@@ -48,7 +53,7 @@ class _LoginViewState extends State<LoginView> {
                   const Text(
                     'Welcome back',
                     style: TextStyle(
-                      color: Colors.black,
+                      color: Colors.white,
                       fontSize: 33,
                       fontWeight: FontWeight.bold,
                     ),
@@ -85,7 +90,7 @@ class _LoginViewState extends State<LoginView> {
                       const Text(
                         "Sign in",
                         style: TextStyle(
-                          color: Colors.black54,
+                          color: Colors.white,
                           fontSize: 27,
                           fontWeight: FontWeight.w700,
                         ),
@@ -94,7 +99,7 @@ class _LoginViewState extends State<LoginView> {
                         radius: 30,
                         backgroundColor: Colors.purple[300],
                         child: IconButton(
-                          color: Colors.black,
+                          color: Colors.white,
                           onPressed: _login,
                           icon: const Icon(Icons.arrow_forward),
                         ),
@@ -114,7 +119,7 @@ class _LoginViewState extends State<LoginView> {
                           style: TextStyle(
                             decoration: TextDecoration.underline,
                             fontSize: 18,
-                            color: Colors.black,
+                            color: Colors.white,
                           ),
                         ),
                       ),
@@ -127,7 +132,7 @@ class _LoginViewState extends State<LoginView> {
                           style: TextStyle(
                             decoration: TextDecoration.underline,
                             fontSize: 18,
-                            color: Colors.black,
+                            color: Colors.white,
                           ),
                         ),
                       ),
