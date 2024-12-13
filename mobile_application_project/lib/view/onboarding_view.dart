@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 class OnboardingView extends StatefulWidget {
   const OnboardingView({super.key});
@@ -67,12 +66,9 @@ class _OnboardingViewState extends State<OnboardingView> {
                     backgroundColor:
                         const Color(0xFF8B279C), // Purple background
                   ),
-                  child: SvgPicture.asset(
-                    "assets/icons/Arrow-Right.svg",
-                    colorFilter: const ColorFilter.mode(
-                      Colors.white,
-                      BlendMode.srcIn,
-                    ),
+                  child: const Icon(
+                    Icons.arrow_forward,
+                    color: Colors.white, // White arrow color
                   ),
                 ),
               ),
@@ -103,13 +99,13 @@ final List<Onboard> demoData = [
         "Discover licensed mental health professionals who can provide personalized care for your unique needs.",
   ),
   Onboard(
-    images: "assets/images/flower.png",
+    images: "assets/images/appoint.png",
     title: "Book Therapy Sessions with Ease",
     description:
         "Schedule appointments at your convenience, and manage your mental health journey seamlessly.",
   ),
   Onboard(
-    images: "assets/images/flower.png",
+    images: "assets/images/chat.png",
     title: "Chat Anytime, Anywhere",
     description:
         "Connect with therapists through secure chat for support and guidance whenever you need it.",
@@ -118,11 +114,11 @@ final List<Onboard> demoData = [
 
 class OnboardContent extends StatelessWidget {
   const OnboardContent({
-    Key? key,
+    super.key,
     required this.images,
     required this.title,
     required this.description,
-  }) : super(key: key);
+  });
 
   final String images, title, description;
 
