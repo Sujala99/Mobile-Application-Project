@@ -11,116 +11,201 @@ class _RegisterViewState extends State<RegisterView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        children: [
-          Container(
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                colors: [Color(0xFF8B279C), Color(0xFFBB87D7)],
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-              ),
-            ),
-          ),
-          SingleChildScrollView(
+      backgroundColor: const Color(0xFFF4E8FF), // Soft Lavender Background
+      body: SafeArea(
+        child: Center(
+          child: SingleChildScrollView(
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 35),
+              padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 20),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  const SizedBox(height: 50),
+                  // Main Heading
                   const Text(
-                    'Register',
+                    "Create Account",
                     style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 33,
+                      fontSize: 28,
                       fontWeight: FontWeight.bold,
+                      color: Color(0xFF3D0066), // Dark Purple
                     ),
                   ),
-                  SizedBox(height: MediaQuery.of(context).size.height * 0.1),
+                  const SizedBox(height: 20),
+
+                  // Illustration
+                  Image.asset(
+                    'assets/images/login.png', // Replace with your illustration path
+                    height: 200,
+                  ),
+                  const SizedBox(height: 30),
+
+                  // Username Input
                   TextField(
                     decoration: InputDecoration(
+                      hintText: 'Enter Username',
+                      hintStyle: const TextStyle(
+                        color: Color(0xFFA8A8A8), // Medium Gray
+                      ),
+                      prefixIcon: const Icon(Icons.person_outline),
                       filled: true,
-                      fillColor: Colors.grey.shade100,
-                      hintText: "Username",
+                      fillColor: Colors.white,
                       border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
+                        borderRadius:
+                            BorderRadius.circular(8), // Rounded corners
+                        borderSide: const BorderSide(
+                          color: Color(0xFFD4B5F0), // Soft Violet
+                        ),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide: const BorderSide(
+                          color: Color(0xFFD4B5F0), // Soft Violet
+                        ),
                       ),
                     ),
                   ),
-                  const SizedBox(height: 30),
+                  const SizedBox(height: 20),
+
+                  // Email Input
                   TextField(
                     decoration: InputDecoration(
+                      hintText: 'Enter Email',
+                      hintStyle: const TextStyle(
+                        color: Color(0xFFA8A8A8), // Medium Gray
+                      ),
+                      prefixIcon: const Icon(Icons.email_outlined),
                       filled: true,
-                      fillColor: Colors.grey.shade100,
-                      hintText: "Email",
+                      fillColor: Colors.white,
                       border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
+                        borderRadius:
+                            BorderRadius.circular(8), // Rounded corners
+                        borderSide: const BorderSide(
+                          color: Color(0xFFD4B5F0), // Soft Violet
+                        ),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide: const BorderSide(
+                          color: Color(0xFFD4B5F0), // Soft Violet
+                        ),
                       ),
                     ),
                   ),
-                  const SizedBox(height: 30),
+                  const SizedBox(height: 20),
+
+                  // Phone Number Input
+                  TextField(
+                    decoration: InputDecoration(
+                      hintText: 'Enter Phone Number',
+                      hintStyle: const TextStyle(
+                        color: Color(0xFFA8A8A8), // Medium Gray
+                      ),
+                      prefixIcon: const Icon(Icons.phone_outlined),
+                      filled: true,
+                      fillColor: Colors.white,
+                      border: OutlineInputBorder(
+                        borderRadius:
+                            BorderRadius.circular(8), // Rounded corners
+                        borderSide: const BorderSide(
+                          color: Color(0xFFD4B5F0), // Soft Violet
+                        ),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide: const BorderSide(
+                          color: Color(0xFFD4B5F0), // Soft Violet
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+
+                  // Password Input
                   TextField(
                     obscureText: true,
                     decoration: InputDecoration(
-                      filled: true,
-                      fillColor: Colors.grey.shade100,
-                      hintText: "Phone Number",
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
+                      hintText: 'Enter Password',
+                      hintStyle: const TextStyle(
+                        color: Color(0xFFA8A8A8), // Medium Gray
                       ),
-                    ),
-                  ),
-                  const SizedBox(height: 40),
-                  TextField(
-                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.lock_outline),
+                      suffixIcon: const Icon(Icons.visibility_off),
                       filled: true,
-                      fillColor: Colors.grey.shade100,
-                      hintText: "Password",
+                      fillColor: Colors.white,
                       border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
+                        borderRadius:
+                            BorderRadius.circular(8), // Rounded corners
+                        borderSide: const BorderSide(
+                          color: Color(0xFFD4B5F0), // Soft Violet
+                        ),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide: const BorderSide(
+                          color: Color(0xFFD4B5F0), // Soft Violet
+                        ),
                       ),
                     ),
                   ),
                   const SizedBox(height: 30),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text(
-                        "Sign up",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 27,
-                          fontWeight: FontWeight.w700,
+
+                  // Register Button
+                  SizedBox(
+                    width: double.infinity,
+                    height: 50,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        // Registration logic here
+                      },
+                      style: ElevatedButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        padding: const EdgeInsets.all(0),
+                      ),
+                      child: Ink(
+                        decoration: BoxDecoration(
+                          gradient: const LinearGradient(
+                            colors: [Color(0xFF9370DB), Color(0xFF6A0DAD)],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                          ),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Container(
+                          alignment: Alignment.center,
+                          child: const Text(
+                            'Register',
+                            style: TextStyle(
+                              color: Colors.white, // White Text
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                            ),
+                          ),
                         ),
                       ),
-                      CircleAvatar(
-                        radius: 30,
-                        backgroundColor: Colors.purple[300],
-                        child: IconButton(
-                          color: Colors.white,
-                          onPressed: () {
-                            Navigator.pushNamed(context, '/login');
-                          },
-                          icon: const Icon(Icons.arrow_forward),
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
                   const SizedBox(height: 20),
+
+                  // Bottom Text: Login
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
+                      const Text(
+                        "Already have an account?",
+                        style: TextStyle(fontSize: 16),
+                      ),
                       TextButton(
                         onPressed: () {
                           Navigator.pushNamed(context, '/login');
                         },
                         child: const Text(
-                          'Login',
+                          'Log In',
                           style: TextStyle(
+                            fontSize: 16,
+                            color: Color(0xFF9C4DCC), // Medium Violet
+                            fontWeight: FontWeight.bold,
                             decoration: TextDecoration.underline,
-                            fontSize: 18,
-                            color: Colors.white,
                           ),
                         ),
                       ),
@@ -130,7 +215,7 @@ class _RegisterViewState extends State<RegisterView> {
               ),
             ),
           ),
-        ],
+        ),
       ),
     );
   }
