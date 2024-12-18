@@ -28,7 +28,10 @@ class _OnboardingViewState extends State<OnboardingView> {
       body: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
-            colors: [Color(0xFF8B279C), Color(0xFFBB87D7)],
+            colors: [
+              Color.fromARGB(255, 211, 173, 218),
+              Color.fromARGB(255, 221, 215, 224)
+            ],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
           ),
