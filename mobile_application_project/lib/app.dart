@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:mobile_application_project/common/button_navigation_bar.dart';
-import 'package:mobile_application_project/view/doctor_view.dart';
+import 'package:mobile_application_project/dashboard/doctor_view.dart';
+import 'package:mobile_application_project/dashboard/profile_view.dart';
 import 'package:mobile_application_project/view/homepage.dart';
 import 'package:mobile_application_project/view/login_view.dart';
 import 'package:mobile_application_project/view/onboarding_view.dart';
-import 'package:mobile_application_project/view/profile_view.dart';
 import 'package:mobile_application_project/view/register_view.dart';
 import 'package:mobile_application_project/view/splash_screen_view.dart';
 
@@ -19,9 +19,10 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      initialRoute: '/profile',
+      home: const ButtonNavigationBar(),
+      initialRoute: '/homepage',
       routes: {
-        '/': (context) => const SplashScreen(),
+        '/splashscreen': (context) => const SplashScreen(),
         '/onboard': (context) => const OnboardingView(),
         '/login': (context) => const LoginView(),
         '/register': (context) => const RegisterView(),

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:mobile_application_project/view/appointment_view.dart';
-import 'package:mobile_application_project/view/chat_view.dart';
-import 'package:mobile_application_project/view/doctor_view.dart';
+import 'package:mobile_application_project/dashboard/appointment_view.dart';
+import 'package:mobile_application_project/dashboard/chat_view.dart';
+import 'package:mobile_application_project/dashboard/doctor_view.dart';
+import 'package:mobile_application_project/dashboard/profile_view.dart';
 import 'package:mobile_application_project/view/homepage.dart';
-import 'package:mobile_application_project/view/profile_view.dart';
 
 class ButtonNavigationBar extends StatefulWidget {
   const ButtonNavigationBar({super.key});
@@ -15,45 +15,55 @@ class ButtonNavigationBar extends StatefulWidget {
 class _ButtonNavigationBarState extends State<ButtonNavigationBar> {
   int _selectedIndex = 0;
 
-  List<Widget> lstBottomScreen = [
+  // List of screens corresponding to each BottomNavigationBarItem
+  final List<Widget> _screens = [
     const Homepage(),
     const DoctorView(),
     const ChatView(),
     const AppointmentView(),
     const ProfileView(),
   ];
+
+  // Function to handle BottomNavigationBar taps
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'Dashboard',
-          style: TextStyle(
-            fontFamily: 'Montserrat Bold',
-          ),
-        ),
-        centerTitle: true,
-      ),
+      body: _screens[_selectedIndex], // Display the currently selected screen
       bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        backgroundColor: const Color.fromARGB(255, 238, 145, 233),
-        selectedItemColor: Colors.white,
-        unselectedItemColor: Colors.black,
+        type: BottomNavigationBarType.fixed, // Allows more than 3 items
+        backgroundColor: Colors.purple.shade100, // Updated to a lighter shade
+        selectedItemColor: Colors.purple, // Highlighted icon color
+        unselectedItemColor: Colors.grey, // Non-selected icon color
+        currentIndex: _selectedIndex, // Current active index
+        onTap: _onItemTapped, // Handles taps
         items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Doctor'),
-          BottomNavigationBarItem(icon: Icon(Icons.chat_bubble), label: 'Chat'),
           BottomNavigationBarItem(
-              icon: Icon(Icons.calendar_today), label: 'Appointment'),
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
           BottomNavigationBarItem(
-              icon: Icon(Icons.account_circle), label: 'Profile'),
+            icon: Icon(Icons.person),
+            label: 'Doctor',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.chat_bubble),
+            label: 'Chat',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.calendar_today),
+            label: 'Appointment',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.account_circle),
+            label: 'Profile',
+          ),
         ],
-        currentIndex: _selectedIndex,
-        onTap: (index) {
-          setState(() {
-            _selectedIndex = index;
-          });
-        },
       ),
     );
   }
