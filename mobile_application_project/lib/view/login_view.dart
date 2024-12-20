@@ -32,7 +32,7 @@ class _LoginViewState extends State<LoginView> {
   @override
   Widget build(BuildContext context) {
     return Theme(
-      data: getApplicationTheme(), // Use global theme
+      data: getApplicationTheme(),
       child: Scaffold(
         body: SafeArea(
           child: Center(

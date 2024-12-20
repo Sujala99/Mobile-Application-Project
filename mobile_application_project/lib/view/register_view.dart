@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobile_application_project/common/mysnackbar.dart'; // Snackbar utility
 
 class RegisterView extends StatefulWidget {
   const RegisterView({super.key});
@@ -8,6 +9,40 @@ class RegisterView extends StatefulWidget {
 }
 
 class _RegisterViewState extends State<RegisterView> {
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _phoneController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
+  bool _isPasswordVisible = false;
+
+  void _register() {
+    String username = _usernameController.text.trim();
+    String email = _emailController.text.trim();
+    String phone = _phoneController.text.trim();
+    String password = _passwordController.text;
+
+    if (username.isEmpty ||
+        email.isEmpty ||
+        phone.isEmpty ||
+        password.isEmpty) {
+      showMySnackBar(context, "All fields are required.", color: Colors.red);
+      return;
+    }
+    if (!RegExp(r"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$").hasMatch(email)) {
+      showMySnackBar(context, "Invalid email format.", color: Colors.red);
+      return;
+    }
+    if (password.length < 6) {
+      showMySnackBar(context, "Password must be at least 6 characters long.",
+          color: Colors.red);
+      return;
+    }
+
+    showMySnackBar(context, "Registration Successful!", color: Colors.green);
+    Navigator.pushNamed(context, '/login'); // Redirect to Login Page
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -40,110 +75,70 @@ class _RegisterViewState extends State<RegisterView> {
 
                   // Username Input
                   TextField(
+                    controller: _usernameController,
                     decoration: InputDecoration(
                       hintText: 'Enter Username',
-                      hintStyle: const TextStyle(
-                        color: Color(0xFFA8A8A8), // Medium Gray
-                      ),
                       prefixIcon: const Icon(Icons.person_outline),
                       filled: true,
                       fillColor: Colors.white,
-                      border: OutlineInputBorder(
-                        borderRadius:
-                            BorderRadius.circular(8), // Rounded corners
-                        borderSide: const BorderSide(
-                          color: Color(0xFFD4B5F0), // Soft Violet
-                        ),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        borderSide: const BorderSide(
-                          color: Color(0xFFD4B5F0), // Soft Violet
-                        ),
-                      ),
+                      border: _inputBorder(),
+                      enabledBorder: _inputBorder(),
                     ),
                   ),
                   const SizedBox(height: 20),
 
                   // Email Input
                   TextField(
+                    controller: _emailController,
                     decoration: InputDecoration(
                       hintText: 'Enter Email',
-                      hintStyle: const TextStyle(
-                        color: Color(0xFFA8A8A8), // Medium Gray
-                      ),
                       prefixIcon: const Icon(Icons.email_outlined),
                       filled: true,
                       fillColor: Colors.white,
-                      border: OutlineInputBorder(
-                        borderRadius:
-                            BorderRadius.circular(8), // Rounded corners
-                        borderSide: const BorderSide(
-                          color: Color(0xFFD4B5F0), // Soft Violet
-                        ),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        borderSide: const BorderSide(
-                          color: Color(0xFFD4B5F0), // Soft Violet
-                        ),
-                      ),
+                      border: _inputBorder(),
+                      enabledBorder: _inputBorder(),
                     ),
                   ),
                   const SizedBox(height: 20),
 
                   // Phone Number Input
                   TextField(
+                    controller: _phoneController,
+                    keyboardType: TextInputType.phone,
                     decoration: InputDecoration(
                       hintText: 'Enter Phone Number',
-                      hintStyle: const TextStyle(
-                        color: Color(0xFFA8A8A8), // Medium Gray
-                      ),
                       prefixIcon: const Icon(Icons.phone_outlined),
                       filled: true,
                       fillColor: Colors.white,
-                      border: OutlineInputBorder(
-                        borderRadius:
-                            BorderRadius.circular(8), // Rounded corners
-                        borderSide: const BorderSide(
-                          color: Color(0xFFD4B5F0), // Soft Violet
-                        ),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        borderSide: const BorderSide(
-                          color: Color(0xFFD4B5F0), // Soft Violet
-                        ),
-                      ),
+                      border: _inputBorder(),
+                      enabledBorder: _inputBorder(),
                     ),
                   ),
                   const SizedBox(height: 20),
 
                   // Password Input
                   TextField(
-                    obscureText: true,
+                    controller: _passwordController,
+                    obscureText: !_isPasswordVisible,
                     decoration: InputDecoration(
                       hintText: 'Enter Password',
-                      hintStyle: const TextStyle(
-                        color: Color(0xFFA8A8A8), // Medium Gray
-                      ),
                       prefixIcon: const Icon(Icons.lock_outline),
-                      suffixIcon: const Icon(Icons.visibility_off),
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          _isPasswordVisible
+                              ? Icons.visibility
+                              : Icons.visibility_off,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            _isPasswordVisible = !_isPasswordVisible;
+                          });
+                        },
+                      ),
                       filled: true,
                       fillColor: Colors.white,
-                      border: OutlineInputBorder(
-                        borderRadius:
-                            BorderRadius.circular(8), // Rounded corners
-                        borderSide: const BorderSide(
-                          color: Color(0xFFD4B5F0), // Soft Violet
-                        ),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        borderSide: const BorderSide(
-                          color: Color(0xFFD4B5F0), // Soft Violet
-                        ),
-                      ),
+                      border: _inputBorder(),
+                      enabledBorder: _inputBorder(),
                     ),
                   ),
                   const SizedBox(height: 30),
@@ -153,9 +148,7 @@ class _RegisterViewState extends State<RegisterView> {
                     width: double.infinity,
                     height: 50,
                     child: ElevatedButton(
-                      onPressed: () {
-                        // Registration logic here
-                      },
+                      onPressed: _register,
                       style: ElevatedButton.styleFrom(
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8),
@@ -176,7 +169,7 @@ class _RegisterViewState extends State<RegisterView> {
                           child: const Text(
                             'Register',
                             style: TextStyle(
-                              color: Colors.white, // White Text
+                              color: Colors.white,
                               fontWeight: FontWeight.bold,
                               fontSize: 16,
                             ),
@@ -216,6 +209,15 @@ class _RegisterViewState extends State<RegisterView> {
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  OutlineInputBorder _inputBorder() {
+    return OutlineInputBorder(
+      borderRadius: BorderRadius.circular(8),
+      borderSide: const BorderSide(
+        color: Color(0xFFD4B5F0), // Soft Violet
       ),
     );
   }
