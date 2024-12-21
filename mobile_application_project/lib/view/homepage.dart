@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mobile_application_project/dashboard/appointment_view.dart';
+// import 'package:mobile_application_project/dashboard/appointment_view.dart';
 import 'package:mobile_application_project/dashboard/chat_view.dart';
 import 'package:mobile_application_project/dashboard/doctor_view.dart';
 import 'package:mobile_application_project/dashboard/profile_view.dart';
@@ -18,7 +18,7 @@ class _HomepageState extends State<Homepage> {
     const HomeView(),
     const DoctorView(),
     const ChatView(),
-    const AppointmentView(),
+    // const AppointmentView(),
     const ProfileView(),
   ];
 
@@ -45,8 +45,8 @@ class _HomepageState extends State<Homepage> {
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
           BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Doctors'),
           BottomNavigationBarItem(icon: Icon(Icons.chat), label: 'Chat'),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.calendar_today), label: 'Appointments'),
+          // BottomNavigationBarItem(
+          //     icon: Icon(Icons.calendar_today), label: 'Appointments'),
           BottomNavigationBarItem(
               icon: Icon(Icons.account_circle), label: 'Profile'),
         ],
