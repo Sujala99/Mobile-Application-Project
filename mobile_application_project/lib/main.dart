@@ -1,6 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:mobile_application_project/app.dart';
+import 'package:softwarica_student_management_bloc/app/app.dart';
+import 'package:softwarica_student_management_bloc/app/di/di.dart';
+import 'package:softwarica_student_management_bloc/core/network/local_network.dart';
 
-void main() {
-  runApp(const MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await HiveService.init();
+
+  // await HiveService().clearStudentBox();
+
+  await initDependencies();
+
+  runApp(
+    App(),
+  );
 }
