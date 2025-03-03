@@ -1,9 +1,10 @@
 import 'dart:io';
 
 import 'package:dartz/dartz.dart';
-import 'package:mobile_application_project/app/usecase/usecase.dart';
-import 'package:mobile_application_project/core/error/failure.dart';
-import 'package:mobile_application_project/features/auth/domain/repository/auth_repository.dart';
+
+import '../../../../app/usecase/usecase.dart';
+import '../../../../core/error/failure.dart';
+import '../repository/auth_repository.dart';
 
 class UploadImageParams {
   final File file;

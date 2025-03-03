@@ -1,114 +1,120 @@
-import 'package:mobile_application_project/app/constants/hive_table_constant.dart';
-import 'package:uuid/uuid.dart';
-import 'package:hive/hive.dart';
 import 'package:equatable/equatable.dart';
-import '../../domain/entity/auth_entity.dart';
+import 'package:hive_flutter/adapters.dart';
+import 'package:mobile_application_project/features/auth/domain/entity/auth_entity';
+import 'package:uuid/uuid.dart';
+
+import '../../../../app/constants/hive_table_constant.dart';
 
 part 'auth_hive_model.g.dart';
 
 @HiveType(typeId: HiveTableConstant.authTableId)
 class AuthHiveModel extends Equatable {
   @HiveField(0)
-  final String userId;
+  final String? authId;
 
   @HiveField(1)
   final String username;
 
   @HiveField(2)
-  final String phone;
-
-  @HiveField(3)
-  final String fullname;
-
-  @HiveField(4)
-  final DateTime? dob;
-
-  @HiveField(5)
-  final String? gender;
-
-  @HiveField(6)
-  final String address;
-
-  @HiveField(7)
-  final String? image;
-
-  @HiveField(8)
   final String email;
 
-  @HiveField(9)
+  @HiveField(3)
   final String password;
 
-  // Constructor
+  @HiveField(4)
+  final String contactNo;
+
+  @HiveField(5)
+  final String? image;
+
+  @HiveField(6)
+  final String fullname;
+
+  @HiveField(7)
+  final DateTime? dob;
+
+  @HiveField(8)
+  final String? gender;
+
+  @HiveField(9)
+  final String? address;
+
   AuthHiveModel({
-    String? userId,
+    String? authId,
     required this.username,
-    required this.phone,
+    required this.email,
+    required this.password,
+    required this.contactNo,
+    this.image,
     required this.fullname,
     this.dob,
     this.gender,
-    required this.address,
-    this.image,
-    required this.email,
-    required this.password,
-  }) : userId = userId ?? const Uuid().v4();
+    this.address,
+  }) : authId = authId ?? const Uuid().v4();
 
-  // Initial Constructor
-
+// Initial Constructor
   const AuthHiveModel.initial()
-      : userId = '',
+      : authId = '',
         username = '',
-        phone = '',
+        email = '',
+        password = '',
+        contactNo = '',
+        image = null,
         fullname = '',
         dob = null,
         gender = null,
-        address = '',
-        image = null,
-        email = '',
-        password = '';
+        address = null;
 
-  // Convert from Entity
-  factory AuthHiveModel.fromEntity(AuthEntity entity) {
+// From Entity
+  factory AuthHiveModel.fromEntity(AuthEntity authEntity) {
     return AuthHiveModel(
-      userId: entity.userId,
-      username: entity.username,
-      phone: entity.phone,
-      fullname: entity.fullname,
-      dob: entity.dob,
-      gender: entity.gender,
-      address: entity.address,
-      image: entity.image,
-      email: entity.email,
-      password: entity.password,
+      authId: authEntity.authId,
+      username: authEntity.username,
+      email: authEntity.email,
+      password: authEntity.password,
+      contactNo: authEntity.contactNo,
+      image: authEntity.image,
+      fullname: authEntity.fullname,
+      dob: authEntity.dob,
+      gender: authEntity.gender,
+      address: authEntity.address,
     );
   }
 
-  // Convert to Entity
+// To Entity
   AuthEntity toEntity() {
     return AuthEntity(
-      userId: userId,
+      authId: authId,
+      email: email,
+      contactNo: contactNo,
+      image: image,
       username: username,
-      phone: phone,
+      password: password,
       fullname: fullname,
       dob: dob,
       gender: gender,
       address: address,
-      image: image,
-      email: email,
-      password: password,
     );
+  }
+
+// From Entity List
+  static List<AuthHiveModel> fromEntityList(List<AuthEntity> entityList) {
+    return entityList
+        .map((authEntity) => AuthHiveModel.fromEntity(authEntity))
+        .toList();
   }
 
   @override
   List<Object?> get props => [
-        userId,
+        authId,
         username,
-        phone,
+        email,
+        password,
+        contactNo,
+        image,
         fullname,
         dob,
         gender,
         address,
-        image,
-        email,
-        password
       ];
 }

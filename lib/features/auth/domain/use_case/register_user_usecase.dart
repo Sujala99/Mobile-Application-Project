@@ -1,102 +1,79 @@
 import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
-import 'package:mobile_application_project/app/usecase/usecase.dart';
-import 'package:mobile_application_project/core/error/failure.dart';
-import 'package:mobile_application_project/features/auth/domain/entity/auth_entity.dart';
-import 'package:mobile_application_project/features/auth/domain/repository/auth_repository.dart';
+import 'package:mobile_application_project/features/auth/data/repository/auth_remote_repository/auth_remote_repository.dart';
+
+import '../../../../app/usecase/usecase.dart';
+import '../../../../core/error/failure.dart';
+import '../entity/auth_entity';
+import '../repository/auth_repository.dart';
 
 class RegisterUserParams extends Equatable {
-  final String fullname;
   final String email;
-  final String phone;
-  final String address;
+  final String? image;
+  final String contactNo;
   final String username;
   final String password;
+  final String fullname;
   final DateTime? dob;
-  final String? image;
   final String? gender;
+  final String? address;
 
-//phone number, dob, gender, image,
   const RegisterUserParams({
-    this.dob,
-    this.image,
-    this.gender,
-    required this.fullname,
     required this.email,
-    required this.phone,
-    required this.address,
+    this.image,
+    required this.contactNo,
     required this.username,
     required this.password,
+    required this.fullname,
+    this.dob,
+    this.gender,
+    this.address,
   });
 
-  // // Initial constructor (use this if you want an empty state for the object)
-  // const RegisterUserParams.initial(this.dob, this.image, this.gender)
-  //     : fullname = '',
-  //       email = '',
-  //       phone = '',
-  //       address = '',
-  //       username = '',
-  //       password = '';
-
-  const RegisterUserParams.empty()
-      : fullname = '_empty.fullname',
-        email = '_empty.email',
-        phone = '_empty.phone',
-        address = '_empty.address',
-        username = '_empty.username',
-        password = '_empty.password',
-        dob = null, // Ensure null for DateTime?
+  // Initial Constructor
+  const RegisterUserParams.initial()
+      : email = '',
         image = null,
-        gender = null;
+        contactNo = '',
+        username = '',
+        password = '',
+        fullname = '',
+        dob = null,
+        gender = null,
+        address = null;
 
   @override
   List<Object?> get props => [
-        fullname,
         email,
-        phone,
-        address,
+        image,
+        contactNo,
         username,
         password,
-        image,
-        gender,
+        fullname,
         dob,
+        gender,
+        address
       ];
-
-  Map<String, dynamic> toJson() {
-    return {
-      'fullname': fullname,
-      'email': email,
-      'phone': phone,
-      'username': username,
-      'password': password,
-      'image': image,
-      'gender': gender,
-      'dob': dob,
-      'address': address,
-    };
-  }
 }
 
-class RegisterUserUseCase
-    implements UsecaseWithParams<void, RegisterUserParams> {
-  final IAuthRepository userRepository;
+class RegisterUseCase implements UsecaseWithParams<void, RegisterUserParams> {
+  final IAuthRepository repository;
 
-  const RegisterUserUseCase({required this.userRepository});
+  RegisterUseCase(this.repository);
 
   @override
-  Future<Either<Failure, void>> call(RegisterUserParams params) async {
+  Future<Either<Failure, void>> call(RegisterUserParams params) {
     final authEntity = AuthEntity(
-      userId: '', // Will be assigned later, or can be left empty for now
-      fullname: params.fullname,
       email: params.email,
-      phone: params.phone,
-      address: params.address,
+      image: params.image,
+      contactNo: params.contactNo,
       username: params.username,
       password: params.password,
-      dob: params.dob, // Add defaults for optional fields
+      fullname: params.fullname,
+      dob: params.dob,
       gender: params.gender,
-      image: params.image,
+      address: params.address,
     );
-    return await userRepository.registerUser(authEntity);
+    return repository.registerUser(authEntity);
   }
 }

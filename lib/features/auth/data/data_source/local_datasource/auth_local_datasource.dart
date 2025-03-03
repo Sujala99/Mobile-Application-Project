@@ -1,40 +1,52 @@
 import 'dart:io';
-import 'package:hive/hive.dart';
-import 'package:mobile_application_project/core/network/local_network.dart';
-import 'package:mobile_application_project/features/auth/data/data_source/auth_data_source.dart';
-import 'package:mobile_application_project/features/auth/domain/entity/auth_entity.dart';
+
+import '../../../../../core/network/local_network.dart';
+import '../../../domain/entity/auth_entity';
+import '../../model/auth_hive_model.dart';
+import '../auth_data_source.dart';
 
 class AuthLocalDataSource implements IAuthDataSource {
-  final Box authBox = Hive.box('authBox');
+  final HiveService _hiveService;
 
-  AuthLocalDataSource(HiveService hiveService);
+  AuthLocalDataSource(this._hiveService);
+
+  @override
+  Future<AuthEntity> getCurrentUser() {
+    return Future.value(AuthEntity(
+        authId: '1',
+        email: '',
+        contactNo: '',
+        image: null,
+        username: '',
+        password: '', 
+        fullname: ''));
+  }
 
   @override
   Future<String> loginUser(String username, String password) async {
-    final authEntity = authBox.values.firstWhere(
-      (user) => user.username == username && user.password == password,
-      orElse: () => null,
-    );
-    if (authEntity != null) {
-      return authEntity.userId;
+    try {
+      await _hiveService.login(username, password);
+      return Future.value("Success");
+    } catch (e) {
+      return Future.error(e);
     }
-    throw Exception('Invalid credentials');
   }
 
   @override
-  Future<void> registerUser(AuthEntity userEntity) async {
-    await authBox.put(userEntity.userId, userEntity);
+  Future<void> registerUser(AuthEntity user) async {
+    try {
+      // Convert AuthEntity to AuthHiveModel
+      final authHiveModel = AuthHiveModel.fromEntity(user);
+
+      await _hiveService.register(authHiveModel);
+      return Future.value();
+    } catch (e) {
+      return Future.error(e);
+    }
   }
 
-
-
   @override
-  Future<String> uploadProfilePicture(File file) async {
-    // Handle file upload here and return the URL
-    // You can store the file in a directory and return the file path or URL
+  Future<String> uploadProfilePicture(File file) {
     throw UnimplementedError();
   }
-
-
-
 }

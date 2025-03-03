@@ -1,175 +1,209 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:mobile_application_project/features/auth/presentation/view/register_view.dart';
-import 'package:mobile_application_project/features/auth/presentation/view_model/login/login_bloc.dart';
+
 import '../../../home/presentation/view/home_view.dart';
+import '../view_model/login/login_bloc.dart';
+import 'sign_up_view.dart';
 
-class LoginView extends StatelessWidget {
-  LoginView({super.key});
+class LoginView extends StatefulWidget {
+  const LoginView({super.key});
 
+  @override
+  State<LoginView> createState() => _LoginViewState();
+}
+
+class _LoginViewState extends State<LoginView> {
   final _formKey = GlobalKey<FormState>();
-  final _usernameController = TextEditingController(text: 'kiran');
-  final _passwordController = TextEditingController(text: 'test12345');
+  final _usernameController = TextEditingController();
+  final _passwordController = TextEditingController();
+  bool _isPasswordVisible = false;
+  final FocusNode _usernameFocusNode = FocusNode();
+  final FocusNode _passwordFocusNode = FocusNode();
 
+  final bool _rememberMe = false;
   final _gap = const SizedBox(height: 8);
+
+  @override
+  void dispose() {
+    _usernameController.dispose();
+    _passwordController.dispose();
+    _usernameFocusNode.dispose();
+    _passwordFocusNode.dispose();
+    super.dispose();
+  }
+
+  String? _validateUsername(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Username is required';
+    }
+    return null;
+  }
+
+  String? _validatePassword(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Please enter your password';
+    } else if (value.length < 6) {
+      return 'Password must be at least 6 characters long';
+    }
+    return null;
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
+      appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+        title: const Text('Sign In'),
+        centerTitle: true,
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
         child: Form(
           key: _formKey,
-          child: Center(
-            child: SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.all(8),
-                child: Column(
-                  children: [
-                    const Text(
-                      'Login',
-                      style: TextStyle(
-                        fontSize: 30,
-                        fontFamily: 'Brand Bold',
-                      ),
-                    ),
-                    _gap,
-                    TextFormField(
-                      key: const ValueKey('username'),
-                      controller: _usernameController,
-                      decoration: const InputDecoration(
-                        border: OutlineInputBorder(),
-                        labelText: 'Username',
-                      ),
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return 'Please enter username';
-                        }
-                        return null;
-                      },
-                    ),
-                    _gap,
-                    TextFormField(
-                      key: const ValueKey('password'),
-                      controller: _passwordController,
-                      obscureText: true,
-                      decoration: InputDecoration(
-                        labelText: 'Password',
-                      ),
-                      validator: ((value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter password';
-                        }
-                        return null;
-                      }),
-                    ),
-                    _gap,
-                    // ElevatedButton(
-                    //   onPressed: () async {
-                    //     if (_formKey.currentState!.validate()) {
-                    //       final username = _usernameController.text.trim();
-                    //       final password = _passwordController.text.trim();
-                    //
-                    //       // Login using Dio API service
-                    //       try {
-                    //         final apiService = ApiService(Dio());
-                    //         final user = await apiService.loginStudent(
-                    //             username, password);
-                    //
-                    //         if (user != null) {
-                    //           // Successfully authenticated
-                    //           context.read<LoginBloc>().add(
-                    //                 NavigateHomeScreenEvent(
-                    //                   destination: HomeView(),
-                    //                   context: context,
-                    //                 ),
-                    //               );
-                    //         } else {
-                    //           // Invalid credentials
-                    //           showMySnackBar(
-                    //             context: context,
-                    //             message: 'Invalid email or password',
-                    //             color: Color(0xFF9B6763),
-                    //           );
-                    //         }
-                    //       } catch (e) {
-                    //         showMySnackBar(
-                    //           context: context,
-                    //           message: 'An error occurred. Please try again.',
-                    //           color: Color(0xFF9B6763),
-                    //         );
-                    //       }
-                    //     }
-                    //   },
-                    //   child: const SizedBox(
-                    //     height: 50,
-                    //     child: Center(
-                    //       child: Text(
-                    //         'Login',
-                    //         style: TextStyle(
-                    //           fontSize: 18,
-                    //           fontFamily: 'Brand Bold',
-                    //         ),
-                    //       ),
-                    //     ),
-                    //   ),
-                    // ),
-                    ElevatedButton(
-                      onPressed: () {
-                        if (_formKey.currentState!.validate()) {
-                          final username = _usernameController.text.trim();
-                          final password = _passwordController.text.trim();
-
-                          context.read<LoginBloc>().add(
-                                LoginUserEvent(
-                                  username: username,
-                                  password: password,
-                                  context: context,
-                                  destination: HomeView(),
-                                ),
-                              );
-                        }
-                      },
-                      child: const SizedBox(
-                        height: 50,
-                        child: Center(
-                          child: Text(
-                            'Login',
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontFamily: 'Brand Bold',
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    ElevatedButton(
-                      key: const ValueKey('registerButton'),
-                      onPressed: () {
-                        context.read<LoginBloc>().add(
-                              NavigateRegisterScreenEvent(
-                                destination: RegisterView(),
-                                context: context,
-                              ),
-                            );
-                      },
-                      child: const SizedBox(
-                        height: 50,
-                        child: Center(
-                          child: Text(
-                            'Register',
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontFamily: 'Brand Bold',
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              const Text(
+                'Sign In',
+                style: TextStyle(
+                  fontSize: 28,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.purple,
                 ),
               ),
-            ),
+              const SizedBox(height: 8.0),
+              const Text(
+                'Please sign in to your registered account',
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.black,
+                ),
+              ),
+              const SizedBox(height: 20.0),
+              TextFormField(
+                focusNode: _usernameFocusNode,
+                controller: _usernameController,
+                decoration: const InputDecoration(
+                  prefixIcon: Icon(Icons.person),
+                  labelText: 'Username',
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide.none,
+                    borderRadius: BorderRadius.all(Radius.circular(8.0)),
+                  ),
+                  filled: true,
+                  fillColor: Color.fromARGB(255, 236, 233, 233),
+                ),
+                validator: _validateUsername,
+              ),
+              const SizedBox(height: 16.0),
+              TextFormField(
+                focusNode: _passwordFocusNode,
+                controller: _passwordController,
+                obscureText: !_isPasswordVisible,
+                decoration: InputDecoration(
+                  prefixIcon: const Icon(Icons.lock),
+                  suffixIcon: IconButton(
+                    icon: Icon(
+                      _isPasswordVisible
+                          ? Icons.visibility
+                          : Icons.visibility_off,
+                      color: Colors.black,
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        _isPasswordVisible = !_isPasswordVisible;
+                      });
+                    },
+                  ),
+                  labelText: 'Password',
+                  border: const OutlineInputBorder(
+                    borderSide: BorderSide.none,
+                    borderRadius: BorderRadius.all(Radius.circular(8.0)),
+                  ),
+                  filled: true,
+                  fillColor: const Color.fromARGB(255, 236, 233, 233),
+                ),
+                validator: _validatePassword,
+              ),
+              const SizedBox(height: 24.0),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () {
+                    if (_formKey.currentState!.validate()) {
+                      context.read<LoginBloc>().add(
+                            NavigateHomeScreenEvent(
+                              destination: const HomeView(),
+                              context: context,
+                            ),
+                          );
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.purple,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                  ),
+                  child: const Text(
+                    'LOGIN',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 8.0),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text(
+                    'Forgot your password?',
+                    style: TextStyle(
+                      color: Colors.black,
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/forgotpassword');
+                    },
+                    child: const Text(
+                      'Reset here',
+                      style: TextStyle(
+                        color: Colors.purple,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 8.0),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () {
+                    context.read<LoginBloc>().add(
+                          NavigateRegisterScreenEvent(
+                            destination: const SignUpView(),
+                            context: context,
+                          ),
+                        );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color.fromARGB(255, 236, 233, 233),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                  ),
+                  child: const Text(
+                    'CREATE ACCOUNT',
+                    style: TextStyle(color: Colors.purple),
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
       ),

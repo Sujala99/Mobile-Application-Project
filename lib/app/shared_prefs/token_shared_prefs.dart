@@ -10,7 +10,7 @@ class TokenSharedPrefs {
   Future<Either<Failure, void>> saveToken(String token) async {
     try {
       await _sharedPreferences.setString('token', token);
-      return Right(null);
+      return const Right(null);
     } catch (e) {
       return Left(SharedPrefsFailure(message: e.toString()));
     }

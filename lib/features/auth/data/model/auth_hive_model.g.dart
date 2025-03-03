@@ -17,16 +17,16 @@ class AuthHiveModelAdapter extends TypeAdapter<AuthHiveModel> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return AuthHiveModel(
-      userId: fields[0] as String?,
+      authId: fields[0] as String?,
       username: fields[1] as String,
-      phone: fields[2] as String,
-      fullname: fields[3] as String,
-      dob: fields[4] as DateTime?,
-      gender: fields[5] as String?,
-      address: fields[6] as String,
-      image: fields[7] as String?,
-      email: fields[8] as String,
-      password: fields[9] as String,
+      email: fields[2] as String,
+      password: fields[3] as String,
+      contactNo: fields[4] as String,
+      image: fields[5] as String?,
+      fullname: fields[6] as String,
+      dob: fields[7] as DateTime?,
+      gender: fields[8] as String?,
+      address: fields[9] as String?,
     );
   }
 
@@ -35,25 +35,25 @@ class AuthHiveModelAdapter extends TypeAdapter<AuthHiveModel> {
     writer
       ..writeByte(10)
       ..writeByte(0)
-      ..write(obj.userId)
+      ..write(obj.authId)
       ..writeByte(1)
       ..write(obj.username)
       ..writeByte(2)
-      ..write(obj.phone)
-      ..writeByte(3)
-      ..write(obj.fullname)
-      ..writeByte(4)
-      ..write(obj.dob)
-      ..writeByte(5)
-      ..write(obj.gender)
-      ..writeByte(6)
-      ..write(obj.address)
-      ..writeByte(7)
-      ..write(obj.image)
-      ..writeByte(8)
       ..write(obj.email)
+      ..writeByte(3)
+      ..write(obj.password)
+      ..writeByte(4)
+      ..write(obj.contactNo)
+      ..writeByte(5)
+      ..write(obj.image)
+      ..writeByte(6)
+      ..write(obj.fullname)
+      ..writeByte(7)
+      ..write(obj.dob)
+      ..writeByte(8)
+      ..write(obj.gender)
       ..writeByte(9)
-      ..write(obj.password);
+      ..write(obj.address);
   }
 
   @override

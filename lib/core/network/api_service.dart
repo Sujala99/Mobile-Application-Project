@@ -22,23 +22,23 @@ class ApiService {
       };
   }
 
-  Future<Map<String, dynamic>?> loginUser(
-      String username, String password) async {
-    try {
-      final response = await _dio.post(
-        ApiEndpoints.login,
-        data: {
-          'username': username,
-          'password': password,
-        },
-      );
+  // Future<Map<String, dynamic>?> loginUser(
+  //     String username, String password) async {
+  //   try {
+  //     final response = await _dio.post(
+  //       ApiEndpoints.login,
+  //       data: {
+  //         'username': username,
+  //         'password': password,
+  //       },
+  //     );
 
-      if (response.statusCode == 200 && response.data['success'] == true) {
-        return response.data['user']; // Assuming the API returns student info.
-      }
-    } catch (e) {
-      rethrow; // Propagate error for further handling.
-    }
-    return null; // Return null if login fails.
-  }
+  //     if (response.statusCode == 200 && response.data['success'] == true) {
+  //       return response.data['user']; // Assuming the API returns student info.
+  //     }
+  //   } catch (e) {
+  //     rethrow; // Propagate error for further handling.
+  //   }
+  //   return null; // Return null if login fails.
+  // }
 }
