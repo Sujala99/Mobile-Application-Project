@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:mobile_application_project/features/auth/domain/entity/auth_entity.dart';
 
-import '../../domain/entity/auth_entity';
 
 part 'auth_api_model.g.dart';
 
@@ -11,7 +11,7 @@ class AuthApiModel extends Equatable {
   final String? authId;
   final String email;
   final String? image;
-  @JsonKey(name: 'contact_no')
+  @JsonKey(name: 'phonenumber')
   final String contactNo;
   final String username;
   final String password;
@@ -31,7 +31,7 @@ class AuthApiModel extends Equatable {
       _$AuthApiModelFromJson(json);
 
   Map<String, dynamic> toJson() => _$AuthApiModelToJson(this);
-
+  
   // To Entity
   AuthEntity toEntity() {
     return AuthEntity(

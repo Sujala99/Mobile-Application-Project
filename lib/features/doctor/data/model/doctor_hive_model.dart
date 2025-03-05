@@ -100,7 +100,7 @@ class DoctorHiveModel extends Equatable {
         role = null,
         description = null;
 
-  /// **Convert from Entity**
+// FROM ENTITY
   factory DoctorHiveModel.fromEntity(DoctorEntity doctorEntity) {
     return DoctorHiveModel(
       doctorId: doctorEntity.doctorId,
@@ -146,11 +146,12 @@ class DoctorHiveModel extends Equatable {
     );
   }
 
-  /// **Convert from Entity List**
-  static List<DoctorHiveModel> fromEntityList(List<DoctorEntity> entityList) {
-    return entityList
-        .map((doctorEntity) => DoctorHiveModel.fromEntity(doctorEntity))
-        .toList();
+  static List<DoctorHiveModel> fromEntityList(List<DoctorEntity> entities) {
+    return entities.map((e) => DoctorHiveModel.fromEntity(e)).toList();
+  }
+
+  static List<DoctorEntity> toEntityList(List<DoctorHiveModel> entities) {
+    return entities.map((e) => e.toEntity()).toList();
   }
 
   @override

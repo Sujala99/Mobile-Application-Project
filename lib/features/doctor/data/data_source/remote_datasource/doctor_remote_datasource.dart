@@ -1,12 +1,11 @@
 import 'dart:io';
-
 import 'package:dio/dio.dart';
-import 'package:mobile_application_project/features/doctor/data/dto/get_all_doctor/get_all_doctors_dto.dart';
-import 'package:mobile_application_project/features/doctor/data/model/doctor_hive_model.dart';
+import 'package:mobile_application_project/app/constants/api_endpoints.dart';
+import 'package:mobile_application_project/features/doctor/data/data_source/doctor_data_source.dart';
+import 'package:mobile_application_project/features/doctor/data/dto/get_all_doctor_details_dto.dart';
+import 'package:mobile_application_project/features/doctor/data/dto/get_all_doctor_dto.dart';
+import 'package:mobile_application_project/features/doctor/data/model/doctor_api_model.dart';
 import 'package:mobile_application_project/features/doctor/domain/entity/doctor_entity.dart';
-import '../../../../../app/constants/api_endpoints.dart';
-import '../../model/doctor_api_model.dart';
-import '../doctor_data_source.dart';
 
 class DoctorRemoteDatasource implements IDoctorDataSource {
   final Dio _dio;
@@ -14,66 +13,44 @@ class DoctorRemoteDatasource implements IDoctorDataSource {
   DoctorRemoteDatasource(this._dio);
 
   @override
-  Future<void> addDoctor(DoctorEntity doctor) async {
+  Future<DoctorEntity> getDoctorDetailsById(String doctorId) async {
     try {
-      // Convert entity to model
-      var batchApiModel = DoctorApiModel.fromEntity(doctor);
-      var response = await _dio.post(
-        ApiEndpoints.addDoctor,
-        data: batchApiModel.toJson(),
-      );
-      if (response.statusCode == 201) {
-        return;
+      // var response = await _dio.get("${ApiEndpoints.getDoctorById}/$doctorId");
+      final response = await _dio.get(
+          "${ApiEndpoints.baseUrl}${ApiEndpoints.getDoctorById(doctorId)}");
+
+      print("Raw API Response: ${response.data}"); // ✅ Debugging
+
+      if (response.statusCode == 200 && response.data != null) {
+        // ✅ Ensure response is correctly formatted
+        final json = response.data as Map<String, dynamic>;
+
+        final doctorDTO = GetDoctorDetailsByIdDTO.fromJson(
+            json); // ✅ Directly parse JSON object
+        return doctorDTO.toDomain(); // ✅ Convert DTO to domain entity
       } else {
-        throw Exception(response.statusMessage);
+        throw Exception(
+            "Failed to fetch course details. Status: ${response.statusCode}");
       }
     } on DioException catch (e) {
-      throw Exception(e);
+      print("Dio Error: ${e.message}");
+      throw Exception("Dio Error: ${e.message}");
     } catch (e) {
-      throw Exception(e);
+      print("Error: ${e.toString()}");
+      throw Exception("Error: ${e.toString()}");
     }
   }
 
   @override
-  Future<void> deleteDoctor(String id, String? token) async {
-    try {
-      var response = await _dio.delete(
-        ApiEndpoints.deleteDoctor + id,
-        options: Options(
-          headers: {
-            'Authorization': 'Bearer $token',
-          },
-        ),
-      );
-
-      if (response.statusCode == 200) {
-        return;
-      } else {
-        throw Exception(response.statusMessage);
-      }
-    } on DioException catch (e) {
-      throw Exception(e);
-    } catch (e) {
-      throw Exception(e);
-    }
-  }
-
-  @override
-  Future<List<DoctorHiveModel>> getAllDoctors() async {
+  Future<List<DoctorEntity>> getDoctors() async {
     try {
       var response = await _dio.get(ApiEndpoints.getAllDoctor);
       if (response.statusCode == 200) {
-        GetAllDoctorsDTO doctorAddDTO =
-            GetAllDoctorsDTO.fromJson(response.data);
-
-        // First, convert API models to entity list
-        final entityList = DoctorApiModel.toEntityList(doctorAddDTO.data);
-
-        // Then, convert entity list to HiveModel list
-        final hiveModelList =
-            entityList.map((e) => DoctorHiveModel.fromEntity(e)).toList();
-
-        return hiveModelList;
+        // Convert API response to DTO
+        var doctorDTO =
+            GetAllDoctorDTO.fromJson(response.data as Map<String, dynamic>);
+        // Convert DTO to Entity
+        return DoctorApiModel.toEntityList(doctorDTO.doctors);
       } else {
         throw Exception(response.statusMessage);
       }
@@ -82,17 +59,5 @@ class DoctorRemoteDatasource implements IDoctorDataSource {
     } catch (e) {
       throw Exception(e);
     }
-  }
-
-  @override
-  Future<DoctorHiveModel> getDoctorById(String doctorId) {
-    // TODO: implement getDoctorById
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<void> updateDoctor(DoctorHiveModel doctor) {
-    // TODO: implement updateDoctor
-    throw UnimplementedError();
   }
 }

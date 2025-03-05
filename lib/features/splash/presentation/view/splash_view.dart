@@ -29,10 +29,10 @@ class _SplashViewState extends State<SplashView> {
                 SizedBox(
                   height: 200,
                   width: 200,
-                  child: Image.asset('assets/images/splash.png'),
+                  child: Image.asset('assets/images/logo.png'),
                 ),
                 const Text(
-                  'Student Course Management',
+                  'MindCare',
                   style: TextStyle(
                     fontSize: 25,
                   ),
@@ -44,14 +44,14 @@ class _SplashViewState extends State<SplashView> {
               ],
             ),
           ),
-          Positioned(
-            bottom: 10,
-            left: MediaQuery.of(context).size.width / 4,
-            child: const Text(
-              'Developed by: Khatra Sir le',
-              style: TextStyle(fontSize: 15),
-            ),
-          ),
+          // Positioned(
+          //   bottom: 10,
+          //   left: MediaQuery.of(context).size.width / 4,
+          //   child: const Text(
+          //     // 'Developed by: Khatra Sir le',
+          //     style: TextStyle(fontSize: 15),
+          //   ),
+          // ),
         ],
       ),
     );

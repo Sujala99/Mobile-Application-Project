@@ -1,26 +1,17 @@
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
-// Application (Job Applications)
-// import 'package:job_scout_project/features/application/data/data_source/remote_datasource/application_remote_datasource.dart';
-// import 'package:job_scout_project/features/application/data/repository/application_remote_repository.dart';
-// import 'package:job_scout_project/features/application/domain/repository/application_repository.dart';
-// import 'package:job_scout_project/features/application/domain/usecase/create_application_usecase.dart';
-// import 'package:job_scout_project/features/application/presentation/view_model/application_bloc.dart';
-// Authentication
-
-// Company
-// import 'package:job_scout_project/features/company/data/data_source/remote_datasource/company_remote_datasource.dart';
-// import 'package:job_scout_project/features/company/data/repository/company_remote_repository.dart';
-// import 'package:job_scout_project/features/company/domain/usecase/get_all_company_usecase.dart';
-// import 'package:job_scout_project/features/company/presentation/view_model/company_bloc.dart';
-// import 'package:job_scout_project/features/home/presentation/view_model/home_cubit.dart';
-// import 'package:job_scout_project/features/jobs/data/data_source/remote_datasource/jobs_remote_data_source.dart';
-// import 'package:job_scout_project/features/jobs/data/repository/jobs_remote_repository.dart';
-// import 'package:job_scout_project/features/jobs/domain/use_case/get_all_jobs_usecase.dart';
-// import 'package:job_scout_project/features/jobs/domain/use_case/get_job_by_id_usecase.dart';
-// import 'package:job_scout_project/features/jobs/presentation/view_model/job_bloc.dart';
-// import 'package:job_scout_project/features/splash/presentation/view_model/on_boarding/on_boarding_cubit.dart';
-// import 'package:job_scout_project/features/splash/presentation/view_model/splash_cubit.dart';
+import 'package:mobile_application_project/features/booking/data/data_source/remote_data_source/booking_remote_data_source.dart';
+import 'package:mobile_application_project/features/booking/data/repository/booking_remote_repository/booking_remote_repository.dart';
+import 'package:mobile_application_project/features/booking/domain/use_case/create_booking_usecase.dart';
+import 'package:mobile_application_project/features/booking/presentation/view_model/booking/booking_bloc.dart';
+import 'package:mobile_application_project/features/doctor/data/data_source/local_datasource/doctor_local_data_source.dart';
+import 'package:mobile_application_project/features/doctor/data/data_source/remote_datasource/doctor_remote_datasource.dart';
+import 'package:mobile_application_project/features/doctor/data/repository/doctor_local_repository.dart';
+import 'package:mobile_application_project/features/doctor/data/repository/doctor_remote_repository.dart';
+import 'package:mobile_application_project/features/doctor/domain/repository/doctor_repository.dart';
+import 'package:mobile_application_project/features/doctor/domain/use_case/get_all_doctor_usecase.dart';
+import 'package:mobile_application_project/features/doctor/domain/use_case/get_doctor_details_usecase.dart';
+import 'package:mobile_application_project/features/doctor/presentation/view_model/doctor/doctor_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../core/network/api_service.dart';
@@ -49,8 +40,8 @@ Future<void> initDependencies() async {
   // _initDependencies();
   _initAuthDependencies();
   _initHomeDependencies();
-  // _initCompanyDependencies();
-  // _initApplicationDependencies();
+  _initDoctorDependencies();
+  _initBookingDependencies();
   _initLoginDependencies();
   _initSplashScreenDependencies();
   // _initOnboardingScreenDependencies();
@@ -64,7 +55,7 @@ Future<void> _initSharedPreferences() async {
       () => TokenSharedPrefs(sharedPreferences));
 }
 
-/// *Initialize API Service*
+/// -------------------------- *Initialize API Service*--------------------------
 void _initApiService() {
   getIt.registerLazySingleton<Dio>(() => ApiService(Dio()).dio);
 }
@@ -74,7 +65,7 @@ void _initHiveService() {
   getIt.registerLazySingleton<HiveService>(() => HiveService());
 }
 
-/// *Initialize Authentication Dependencies*
+// -------------- Authentication Dependencies-----------------
 void _initAuthDependencies() {
   getIt.registerLazySingleton<AuthLocalDataSource>(
       () => AuthLocalDataSource(getIt<HiveService>()));
@@ -99,7 +90,7 @@ void _initAuthDependencies() {
       ));
 }
 
-/// *Initialize Home Dependencies*
+/// --------------------------*Initialize Home Dependencies*--------------------------
 void _initHomeDependencies() {
   getIt.registerFactory<HomeCubit>(() => HomeCubit());
 }
@@ -116,112 +107,86 @@ void _initLoginDependencies() {
       ));
 }
 
-/// *Initialize Company Dependencies*
-// void _initCompanyDependencies() {
-//   getIt.registerLazySingleton<CompanyRemoteDataSource>(
-//       () => CompanyRemoteDataSource(getIt<Dio>()));
+/// --------------------------*Initialize Doctor Dependencies*--------------------------
 
-//   getIt.registerLazySingleton<ICompanyRepository>(
-//       () => CompanyRemoteRepository(getIt<CompanyRemoteDataSource>()));
+// =========================== Data Source ===========================
+void _initDoctorDependencies() {
+  getIt.registerFactory<DoctorLocalDataSource>(
+      () => DoctorLocalDataSource(hiveService: getIt<HiveService>()));
 
-//   getIt.registerLazySingleton<CreateCompanyUseCase>(() => CreateCompanyUseCase(
-//         companyRepository: getIt<ICompanyRepository>(),
-//         tokenSharedPrefs: getIt<TokenSharedPrefs>(),
-//       ));
+  getIt.registerFactory<DoctorRemoteDatasource>(
+      () => DoctorRemoteDatasource(getIt<Dio>()));
 
-//   getIt.registerFactory<CompanyBloc>(() => CompanyBloc(
-//         createCompanyUseCase: getIt<CreateCompanyUseCase>(),
-//       ));
-// }
+  // =========================== Repository ===========================
+
+  getIt.registerLazySingleton<DoctorLocalRepository>(() =>
+      DoctorLocalRepository(
+          doctorLocalDataSource: getIt<DoctorLocalDataSource>()));
+
+  getIt.registerLazySingleton<DoctorRemoteRepository>(
+    () => DoctorRemoteRepository(
+      getIt<DoctorRemoteDatasource>(),
+    ),
+  );
+
+  // ===========================Usecases===========================
+  getIt.registerLazySingleton<GetAllDoctorUsecase>(
+    () => GetAllDoctorUsecase(
+      doctorRepository: getIt<DoctorRemoteRepository>(),
+    ),
+  );
+
+  getIt.registerLazySingleton<GetDoctorDetailUseCase>(
+    () => GetDoctorDetailUseCase(
+      doctorRepository: getIt<DoctorRemoteRepository>(),
+    ),
+  );
+
+  // ===========================Bloc===========================
+
+  getIt.registerFactory<DoctorBloc>(
+    () => DoctorBloc(
+      getAllDoctorUsecase: getIt<GetAllDoctorUsecase>(),
+      getDoctorDetailUsecase: getIt<GetDoctorDetailUseCase>(),
+      bookingBloc: getIt<BookingBloc>(),
+    ),
+  );
+}
+
+/// --------------------------*Initialize Booking Dependencies*--------------------------
+
+// =========================== Data Source ===========================
+void _initBookingDependencies() {
+  getIt.registerFactory<BookingRemoteDataSource>(
+      () => BookingRemoteDataSource(getIt<Dio>(),
+                  getIt<TokenSharedPrefs>(),  // ✅ Second argument (Token storage)
+
+      ));
+
+  // =========================== Repository ===========================
+
+  getIt.registerLazySingleton<BookingRemoteRepository>(
+    () => BookingRemoteRepository(
+      getIt<BookingRemoteDataSource>(),
+    ),
+  );
+
+  // ===========================Usecases===========================
+  getIt.registerLazySingleton<CreateBookingUsecase>(
+    () => CreateBookingUsecase(
+      bookingRepository: getIt<BookingRemoteRepository>(),
+    ),
+  );
+
+  // ===========================Bloc===========================
+
+  getIt.registerSingleton<BookingBloc>(BookingBloc(
+  createBookingUsecase: getIt<CreateBookingUsecase>(),
+   tokenSharedPrefs: getIt<TokenSharedPrefs>(),
+));
+}
 
 /// *Initialize Splash Screen Dependencies*
 void _initSplashScreenDependencies() {
   getIt.registerFactory<SplashCubit>(() => SplashCubit(getIt<LoginBloc>()));
 }
-
-/// *Initialize Onboarding Screen Dependencies*
-// void _initOnboardingScreenDependencies() {
-//   getIt.registerFactory<OnboardingCubit>(
-//       () => OnboardingCubit(getIt<LoginBloc>()));
-// }
-
-/// *Initialize Company Dependencies*
-// void _initApplicationDependencies() {
-//   getIt.registerLazySingleton<ApplicationRemoteDataSource>(
-//       () => ApplicationRemoteDataSource(getIt<Dio>()));
-
-//   getIt.registerLazySingleton<IApplicationRepository>(
-//       () => ApplicationRemoteRepository(getIt<ApplicationRemoteDataSource>()));
-
-//   getIt.registerLazySingleton<CreateApplicationUseCase>(
-//       () => CreateApplicationUseCase(
-//             applicationRepository: getIt<IApplicationRepository>(),
-//             tokenSharedPrefs: getIt<TokenSharedPrefs>(),
-//           ));
-//   getIt.registerFactory<ApplicationBloc>(() => ApplicationBloc(
-//         createApplicationUseCase: getIt<CreateApplicationUseCase>(),
-//       ));
-// }
-
-//================================== Job ============================================
-
-// void _initJobDependencies() {
-//   //DataSource
-//   getIt.registerLazySingleton<JobsRemoteDataSource>(
-//     () => JobsRemoteDataSource(
-//       getIt<Dio>(),
-//     ),
-//   );
-
-//   //Repository
-//   getIt.registerLazySingleton<JobRemoteRepository>(
-//     () => JobRemoteRepository(
-//       getIt<JobsRemoteDataSource>(),
-//     ),
-//   );
-
-//   //Usecase
-//   getIt.registerLazySingleton<GetAllJobs>(
-//     () => GetAllJobs(
-//       getIt<JobRemoteRepository>(),
-//     ),
-//   );
-//   getIt.registerLazySingleton<GetJobById>(
-//     () => GetJobById(
-//       getIt<JobRemoteRepository>(),
-//     ),
-//   );
-//   //Bloc
-//   getIt.registerFactory<JobBloc>(
-//     () => JobBloc(
-//       getAllJobs: getIt<GetAllJobs>(),
-//       getJobById: getIt<GetJobById>(),
-//     ),
-//   );
-// }
-
-// //================================== Company ============================================
-
-// void _initCompanyDependencies() {
-//   // DataSource
-//   getIt.registerLazySingleton<CompanyRemoteDataSource>(
-//     () => CompanyRemoteDataSource(getIt<Dio>()),
-//   );
-
-//   // Repository
-//   getIt.registerLazySingleton<CompanyRemoteRepository>(
-//     () => CompanyRemoteRepository(getIt<CompanyRemoteDataSource>()),
-//   );
-
-//   // UseCase
-//   getIt.registerLazySingleton<GetAllCompany>(
-//     () => GetAllCompany(getIt<CompanyRemoteRepository>()),
-//   );
-
-//   // Bloc
-//   getIt.registerFactory<CompanyBloc>(
-//     () => CompanyBloc(
-//       getAllCompany: getIt<GetAllCompany>(),
-//     ),
-//   );
-// }

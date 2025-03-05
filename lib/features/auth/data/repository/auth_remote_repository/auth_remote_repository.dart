@@ -1,8 +1,8 @@
 import 'dart:io';
 
 import 'package:dartz/dartz.dart';
+import 'package:mobile_application_project/features/auth/domain/entity/auth_entity.dart';
 import '../../../../../core/error/failure.dart';
-import '../../../domain/entity/auth_entity';
 import '../../../domain/repository/auth_repository.dart';
 import '../../data_source/remote_datasource/auth_remote_datasource.dart';
 

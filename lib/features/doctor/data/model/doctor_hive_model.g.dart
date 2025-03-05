@@ -8,7 +8,7 @@ part of 'doctor_hive_model.dart';
 
 class DoctorHiveModelAdapter extends TypeAdapter<DoctorHiveModel> {
   @override
-  final int typeId = 0;
+  final int typeId = 1;
 
   @override
   DoctorHiveModel read(BinaryReader reader) {

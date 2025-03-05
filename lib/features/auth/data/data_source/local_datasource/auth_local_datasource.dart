@@ -1,7 +1,8 @@
 import 'dart:io';
 
+import 'package:mobile_application_project/features/auth/domain/entity/auth_entity.dart';
+
 import '../../../../../core/network/local_network.dart';
-import '../../../domain/entity/auth_entity';
 import '../../model/auth_hive_model.dart';
 import '../auth_data_source.dart';
 

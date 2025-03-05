@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:mobile_application_project/core/common/snackbar/my_snackbar.dart';
 import 'package:mobile_application_project/features/home/presentation/view_model/home_cubit.dart';
 import 'package:mobile_application_project/features/home/presentation/view_model/home_state.dart';
 
 class HomeView extends StatelessWidget {
   const HomeView({super.key});
-
-  final bool _isDarkTheme = false;
 
   @override
   Widget build(BuildContext context) {
@@ -16,34 +13,25 @@ class HomeView extends StatelessWidget {
         title: const Text('Home'),
         centerTitle: true,
         actions: [
+          // Show logged-in user ID in the AppBar or somewhere in the view
+          BlocBuilder<HomeCubit, HomeState>(
+            builder: (context, state) {
+              return Text(state.userId); // Display the user ID
+            },
+          ),
           IconButton(
             icon: const Icon(Icons.logout),
             onPressed: () {
-              // Logout code
-              showMySnackBar(
-                context: context,
-                message: 'Logging out...',
-                color: Colors.red,
-              );
-
               context.read<HomeCubit>().logout(context);
-            },
-          ),
-          Switch(
-            value: _isDarkTheme,
-            onChanged: (value) {
-              // Change theme
-              // setState(() {
-              //   _isDarkTheme = value;
-              // });
             },
           ),
         ],
       ),
-      // body: _views.elementAt(_selectedIndex),
-      body: BlocBuilder<HomeCubit, HomeState>(builder: (context, state) {
-        return state.views.elementAt(state.selectedIndex);
-      }),
+      body: BlocBuilder<HomeCubit, HomeState>(
+        builder: (context, state) {
+          return state.views.elementAt(state.selectedIndex);
+        },
+      ),
       bottomNavigationBar: BlocBuilder<HomeCubit, HomeState>(
         builder: (context, state) {
           return BottomNavigationBar(
@@ -54,11 +42,11 @@ class HomeView extends StatelessWidget {
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.book),
-                label: 'Course',
+                label: 'Doctor',
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.group),
-                label: 'Batch',
+                label: 'Appointment',
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.account_circle),

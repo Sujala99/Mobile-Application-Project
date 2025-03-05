@@ -26,7 +26,7 @@ class DoctorApiModel extends Equatable {
   final String? role;
   final String? description;
 
-  const DoctorApiModel({
+  DoctorApiModel({
     this.doctorId,
     required this.email,
     this.image,
@@ -46,12 +46,38 @@ class DoctorApiModel extends Equatable {
     this.description,
   });
 
-  factory DoctorApiModel.fromJson(Map<String, dynamic> json) =>
-      _$DoctorApiModelFromJson(json);
+  // factory DoctorApiModel.fromJson(Map<String, dynamic> json) =>
+  //     _$DoctorApiModelFromJson(json);
 
-  Map<String, dynamic> toJson() => _$DoctorApiModelToJson(this);
+  // Map<String, dynamic> toJson() => _$DoctorApiModelToJson(this);
 
-  // From Entity
+  factory DoctorApiModel.fromJson(Map<String, dynamic> json) {
+    print("API Response: $json"); // Log raw response
+
+    return DoctorApiModel(
+      doctorId: json['_id'] as String?,
+      email: json['email'] ?? '',
+      image: json['image'] as String?, // Allow null
+      contactNo: json['phonenumber'] as String?, // Allow null
+      username: json['username'] ?? '',
+      password: json['password'] ?? '',
+      fullname: json['fullname'] ?? '',
+      dob: json['dob'] != null ? DateTime.parse(json['dob']) : null,
+      gender: json['gender'] as String?,
+      address: json['address'] as String?,
+      specialization: json['specialization'] as String?,
+      qualification: json['qualification'] as String?,
+      experience: json['experience'] as int?,
+      fees: json['fees'] as String?,
+      availableSlots: json['availableSlots'] as String?,
+      role: json['role'] as String?,
+      description: json['description'] as String?,
+    );
+  }
+
+  // To entity
+
+// From Entity
   factory DoctorApiModel.fromEntity(DoctorEntity doctorEntity) {
     return DoctorApiModel(
       username: doctorEntity.username,
@@ -76,6 +102,7 @@ class DoctorApiModel extends Equatable {
   // To Entity
   DoctorEntity toEntity() {
     return DoctorEntity(
+      doctorId: doctorId, // ✅ Add this line
       email: email,
       contactNo: contactNo,
       username: username,
@@ -98,6 +125,13 @@ class DoctorApiModel extends Equatable {
   // To Entity List
   static List<DoctorEntity> toEntityList(List<DoctorApiModel> entityList) {
     return entityList.map((data) => data.toEntity()).toList();
+  }
+
+  // From entity list
+  static List<DoctorApiModel> fromEntityList(List<DoctorEntity> entityList) {
+    return entityList
+        .map((entity) => DoctorApiModel.fromEntity(entity))
+        .toList();
   }
 
   @override

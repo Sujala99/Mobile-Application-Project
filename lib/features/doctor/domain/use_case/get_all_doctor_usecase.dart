@@ -1,17 +1,17 @@
 import 'package:dartz/dartz.dart';
+import 'package:mobile_application_project/app/usecase/usecase.dart';
+import 'package:mobile_application_project/core/error/failure.dart';
 import 'package:mobile_application_project/features/doctor/domain/entity/doctor_entity.dart';
+import 'package:mobile_application_project/features/doctor/domain/repository/doctor_repository.dart';
 
-import '../../../../app/usecase/usecase.dart';
-import '../../../../core/error/failure.dart';
-import '../repository/doctor_repository.dart';
+class GetAllDoctorUsecase implements UsecaseWithoutParams<List<DoctorEntity>> {
+  final IDoctorRepository _doctorRepository;
 
-class GetAllDoctorUseCase implements UsecaseWithoutParams<List<DoctorEntity>> {
-  final IDoctorRepository doctorRepository;
-
-  GetAllDoctorUseCase({required this.doctorRepository});
+  GetAllDoctorUsecase({required IDoctorRepository doctorRepository})
+      : _doctorRepository = doctorRepository;
 
   @override
   Future<Either<Failure, List<DoctorEntity>>> call() {
-    return doctorRepository.getDoctors();
+    return _doctorRepository.getDoctor();
   }
 }

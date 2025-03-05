@@ -17,7 +17,7 @@ class HiveService {
 
     // Open the main boxes
     await Hive.openBox<AuthHiveModel>(HiveTableConstant.userBox);
-    // await Hive.openBox<DoctorHiveModel>(HiveTableConstant.doctorBox);
+    await Hive.openBox<DoctorHiveModel>(HiveTableConstant.doctorBox);
   }
 
   // ----------------------------------------
@@ -72,7 +72,7 @@ class HiveService {
   // * DOCTOR FUNCTIONS
   // ----------------------------------------
 
-  // /// Adds a new doctor
+  /// Adds a new doctor
   // Future<void> addDoctor(DoctorHiveModel doctor) async {
   //   try {
   //     var box = Hive.box<DoctorHiveModel>(HiveTableConstant.doctorBox);
@@ -82,25 +82,25 @@ class HiveService {
   //   }
   // }
 
-  // /// Retrieves all doctors
-  // Future<List<DoctorHiveModel>> getAllDoctors() async {
-  //   try {
-  //     var box = Hive.box<DoctorHiveModel>(HiveTableConstant.doctorBox);
-  //     return box.values.toList();
-  //   } catch (e) {
-  //     throw Exception("Failed to fetch doctors: $e");
-  //   }
-  // }
+  /// Retrieves all doctors
+  Future<List<DoctorHiveModel>> getDoctor() async {
+    try {
+      var box = Hive.box<DoctorHiveModel>(HiveTableConstant.doctorBox);
+      return box.values.toList();
+    } catch (e) {
+      throw Exception("Failed to fetch doctors: $e");
+    }
+  }
 
-  // /// Retrieves a doctor by ID
-  // Future<DoctorHiveModel?> getDoctorById(String doctorId) async {
-  //   try {
-  //     var box = Hive.box<DoctorHiveModel>(HiveTableConstant.doctorBox);
-  //     return box.get(doctorId);
-  //   } catch (e) {
-  //     return null;
-  //   }
-  // }
+  /// Retrieves a doctor by ID
+  Future<DoctorHiveModel?> getDoctorDetail(String doctorId) async {
+    try {
+      var box = Hive.box<DoctorHiveModel>(HiveTableConstant.doctorBox);
+      return box.get(doctorId);
+    } catch (e) {
+      return null;
+    }
+  }
 
   // /// Updates doctor details
   // Future<void> updateDoctor(DoctorHiveModel doctor) async {
@@ -134,7 +134,7 @@ class HiveService {
   Future<void> clearAll() async {
     try {
       await Hive.deleteBoxFromDisk(HiveTableConstant.userBox);
-      // await Hive.deleteBoxFromDisk(HiveTableConstant.doctorBox);
+      await Hive.deleteBoxFromDisk(HiveTableConstant.doctorBox);
     } catch (e) {
       throw Exception("Failed to clear database: $e");
     }
@@ -150,13 +150,13 @@ class HiveService {
   }
 
   /// Clears only the doctor box
-  // Future<void> clearDoctorBox() async {
-  //   try {
-  //     await Hive.deleteBoxFromDisk(HiveTableConstant.doctorBox);
-  //   } catch (e) {
-  //     throw Exception("Failed to clear doctor box: $e");
-  //   }
-  // }
+  Future<void> clearDoctorBox() async {
+    try {
+      await Hive.deleteBoxFromDisk(HiveTableConstant.doctorBox);
+    } catch (e) {
+      throw Exception("Failed to clear doctor box: $e");
+    }
+  }
 
   /// Closes Hive
   Future<void> close() async {

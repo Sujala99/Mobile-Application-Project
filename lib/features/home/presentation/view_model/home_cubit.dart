@@ -1,3 +1,4 @@
+import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile_application_project/app/di/di.dart';
@@ -20,7 +21,8 @@ class HomeCubit extends Cubit<HomeState> {
           context,
           MaterialPageRoute(
             builder: (context) => BlocProvider.value(
-              value: getIt<LoginBloc>(),
+              value:
+                  getIt<LoginBloc>(), // Ensure LoginBloc is properly injected
               child: LoginView(),
             ),
           ),
@@ -28,4 +30,12 @@ class HomeCubit extends Cubit<HomeState> {
       }
     });
   }
+
+  // Store the user ID
+  void setUserId(String userId) {
+    emit(state.copyWith(userId: userId)); // Store user ID in HomeState
+  }
+
+  // Getter for the user ID
+  String get userId => state.userId;
 }
