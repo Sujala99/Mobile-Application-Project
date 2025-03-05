@@ -10,13 +10,22 @@ class HomeView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Home'),
+        title: const Text(
+          'Minecare',
+          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+        ),
+        backgroundColor: Colors.purple,
         centerTitle: true,
         actions: [
-          // Show logged-in user ID in the AppBar or somewhere in the view
           BlocBuilder<HomeCubit, HomeState>(
             builder: (context, state) {
-              return Text(state.userId); // Display the user ID
+              return Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  "User: ${state.userId}",
+                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                ),
+              );
             },
           ),
           IconButton(
@@ -27,10 +36,57 @@ class HomeView extends StatelessWidget {
           ),
         ],
       ),
-      body: BlocBuilder<HomeCubit, HomeState>(
-        builder: (context, state) {
-          return state.views.elementAt(state.selectedIndex);
-        },
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            BlocBuilder<HomeCubit, HomeState>(
+              builder: (context, state) {
+                return Text(
+                  "Welcome To MindCare.",
+                  style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                );
+              },
+            ),
+            const SizedBox(height: 20),
+            const Text(
+              "Early protection for your family's health",
+              style: TextStyle(fontSize: 16),
+            ),
+            const SizedBox(height: 20),
+
+            // Image below the Welcome Text
+            Container(
+              height: 200,
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: NetworkImage("https://your-image-url.com"), // Replace with your image URL
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+            const SizedBox(height: 40),
+
+            // Top Doctors Section
+            const Text(
+              "Top Doctors",
+              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 20),
+
+            // Dummy Doctor Data
+            Expanded(
+              child: ListView(
+                children: [
+                  _buildDoctorCard("Dr. Roshan Poudel", "Ophthalmologist", "https://dummyimage.com/100x100/000/fff"), // Replace with actual image URL
+                  _buildDoctorCard("Dr. Mina Hal", "Dermatologist", "https://dummyimage.com/100x100/000/fff"), // Replace with actual image URL
+                  _buildDoctorCard("Dr. Pradeep Thapa", "Cardiologist", "https://dummyimage.com/100x100/000/fff"), // Replace with actual image URL
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
       bottomNavigationBar: BlocBuilder<HomeCubit, HomeState>(
         builder: (context, state) {
@@ -60,6 +116,20 @@ class HomeView extends StatelessWidget {
             },
           );
         },
+      ),
+    );
+  }
+
+  // Function to build doctor card
+  Widget _buildDoctorCard(String name, String specialty, String imageUrl) {
+    return Card(
+      margin: const EdgeInsets.only(bottom: 16),
+      child: ListTile(
+        leading: CircleAvatar(
+          backgroundImage: NetworkImage(imageUrl), // Display the image
+        ),
+        title: Text(name, style: const TextStyle(fontWeight: FontWeight.bold)),
+        subtitle: Text(specialty),
       ),
     );
   }
