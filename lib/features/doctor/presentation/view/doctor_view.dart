@@ -7,200 +7,145 @@ import 'package:mobile_application_project/features/doctor/presentation/view_mod
 import 'package:mobile_application_project/features/doctor/presentation/view_model/doctor/doctor_state.dart';
 
 class DoctorView extends StatelessWidget {
-  final String baseUrl = "http://10.0.2.2:9000/public/uploads/";
+  final String baseUrl = "http://10.0.2.2:4000/public/uploads/";
 
   const DoctorView({super.key});
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) =>
-          getIt<DoctorBloc>()..add(DoctorLoad()), // ✅ Ensures Bloc is provided
+      create: (context) => getIt<DoctorBloc>()..add(DoctorLoad()),
       child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: const Color.fromARGB(255, 142, 89, 233),
+          title: const Text("Find Your Doctor", style: TextStyle(color: Colors.white)),
+          elevation: 0,
+        ),
         body: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 16), // ✅ Added padding
-          child: BlocBuilder<DoctorBloc, DoctorState>(
-            builder: (context, state) {
-              if (state.isLoading) {
-                return const Center(child: CircularProgressIndicator());
-              } else if (state.error != null) {
-                return Center(
-                  child: Text(
-                    'Error: ${state.error}',
-                    style: const TextStyle(color: Colors.red, fontSize: 16),
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            children: [
+              TextField(
+                decoration: InputDecoration(
+                  hintText: "Search for doctors...",
+                  prefixIcon: const Icon(Icons.search, color: Colors.deepPurple),
+                  filled: true,
+                  fillColor: Colors.white,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide.none,
                   ),
-                );
-              } else if (state.doctors.isEmpty) {
-                return const Center(child: Text('No Doctor Available'));
-              } else {
-                return SizedBox(
-                  height: 270, // ✅ Fixed height for horizontal scrolling
-                  child: ListView.builder(
-                    scrollDirection: Axis.horizontal, // ✅ Horizontal scrolling
-                    itemCount: state.doctors.length,
-                    itemBuilder: (context, index) {
-                      final doctor = state.doctors[index];
+                ),
+              ),
+              const SizedBox(height: 16),
+              Expanded(
+                child: BlocBuilder<DoctorBloc, DoctorState>(
+                  builder: (context, state) {
+                    if (state.isLoading) {
+                      return const Center(child: CircularProgressIndicator());
+                    } else if (state.error != null) {
+                      return Center(
+                        child: Text('Error: ${state.error}',
+                            style: const TextStyle(color: Colors.red, fontSize: 16)),
+                      );
+                    } else if (state.doctors.isEmpty) {
+                      return const Center(child: Text('No Doctor Available'));
+                    } else {
+                      return ListView.builder(
+                        itemCount: state.doctors.length,
+                        itemBuilder: (context, index) {
+                          final doctor = state.doctors[index];
+                          String fullImageUrl = (doctor.image?.isNotEmpty == true)
+                              ? "{doctor.image}"
+                              : "https://via.placeholder.com/150";
 
-                      // ✅ Ensure proper URL formation for images (handle null)
-                      String fullImageUrl = (doctor.image?.isNotEmpty == true)
-                          ? "$baseUrl${doctor.image}"
-                          : "https://via.placeholder.com/150"; // Placeholder Image
-
-                      return Container(
-                        width: 200, // ✅ Fixed width for each course card
-                        margin: const EdgeInsets.symmetric(
-                            horizontal: 10, vertical: 10),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(12),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black26,
-                              blurRadius: 6,
-                              spreadRadius: 2,
-                              offset: const Offset(2, 2),
-                            ),
-                          ],
-                        ),
-                        child: Card(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          elevation: 3,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisSize:
-                                MainAxisSize.min, // ✅ Prevent Overflow
-                            children: [
-                              // ✅ Course Image
-                              ClipRRect(
-                                borderRadius: const BorderRadius.vertical(
-                                    top: Radius.circular(12)),
-                                child: Image.network(
-                                  fullImageUrl,
-                                  height: 100,
-                                  width: double.infinity,
-                                  fit: BoxFit.cover,
-                                  errorBuilder: (context, error, stackTrace) =>
-                                      const Icon(Icons.image_not_supported,
-                                          size: 100),
+                          return Container(
+                            margin: const EdgeInsets.symmetric(vertical: 10),
+                            padding: const EdgeInsets.all(12),
+                            decoration: BoxDecoration(
+                              color: Colors.deepPurple.shade50,
+                              borderRadius: BorderRadius.circular(12),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black12,
+                                  blurRadius: 6,
+                                  offset: const Offset(2, 2),
                                 ),
-                              ),
-                              Expanded(
-                                child: Padding(
-                                  padding: const EdgeInsets.all(10.0),
+                              ],
+                            ),
+                            child: Row(
+                              children: [
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(12),
+                                  child: Image.network(
+                                    fullImageUrl,
+                                    width: 80,
+                                    height: 80,
+                                    fit: BoxFit.cover,
+                                    errorBuilder: (context, error, stackTrace) =>
+                                        const Icon(Icons.image_not_supported, size: 80),
+                                  ),
+                                ),
+                                const SizedBox(width: 16),
+                                Expanded(
                                   child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    mainAxisSize:
-                                        MainAxisSize.min, // ✅ Prevent Overflow
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      // ✅ Course Name
                                       Text(
                                         doctor.fullname,
                                         style: const TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.bold),
+                                            fontSize: 18, fontWeight: FontWeight.bold),
                                       ),
-                                      const SizedBox(height: 2),
-                                      // ✅ Instructor Name
-                                      Text(
-                                        "Username: ${doctor.username}",
-                                        style: const TextStyle(
-                                            fontSize: 14, color: Colors.grey),
-                                      ),
-                                      const SizedBox(height: 2),
-                                      // ✅ Course Duration
-                                      // Text(
-                                      //   doctor.,
-                                      //   style: const TextStyle(
-                                      //       fontSize: 14,
-                                      //       color: Colors.blueAccent),
-                                      // ),
-
-                                      // ✅ "Add to Schedule" Button
-                                      SizedBox(
-                                        width: double.infinity,
-                                        child: ElevatedButton(
-                                          style: ElevatedButton.styleFrom(
-                                            backgroundColor:
-                                                Colors.amber.shade700,
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(8),
-                                            ),
-                                          ),
-                                          // onPressed: () {
-                                          //   final courseBloc =
-                                          //       context.read<DoctorBloc>();
-
-                                          //   // ✅ Navigate to Course Detail Page
-                                          //   Navigator.push(
-                                          //     context,
-                                          //     MaterialPageRoute(
-                                          //       builder: (context) =>
-                                          //           BlocProvider.value(
-                                          //         value:
-                                          //             courseBloc, // ✅ Pass existing Bloc instance
-                                          //         child: DoctorDetailView(
-                                          //             doctorId:
-                                          //                 doctor.doctorId ??
-                                          //                     ''),
-                                          //       ),
-                                          //     ),
-                                          //   );
-                                          // },
-
-                                          onPressed: () {
-                                            final doctorId = doctor.doctorId;
-                                            if (doctorId == null ||
-                                                doctorId.isEmpty) {
-                                              ScaffoldMessenger.of(context)
-                                                  .showSnackBar(
-                                                const SnackBar(
-                                                    content: Text(
-                                                        "Doctor ID is missing!")),
-                                              );
-                                              return;
-                                            }
-
-                                            final doctorBloc =
-                                                context.read<DoctorBloc>();
-
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    BlocProvider.value(
-                                                  value:
-                                                      doctorBloc, // ✅ Pass existing Bloc instance
-                                                  child: DoctorDetailView(
-                                                      doctorId: doctorId),
-                                                ),
-                                              ),
-                                            );
-                                          },
-
-                                          child: const Text(
-                                            "Book Appointment",
-                                            style: TextStyle(
-                                                color: Colors.black,
-                                                fontSize: 15),
-                                          ),
-                                        ),
-                                      ),
+                                      Text("Specialist: ${doctor.specialization ?? "N/A"}",
+                                          style: const TextStyle(fontSize: 14, color: Colors.grey)),
+                                      Text("Experience: ${doctor.experience ?? "N/A"} years",
+                                          style: const TextStyle(fontSize: 14, color: Colors.grey)),
+                                      Text("Fees: \$${doctor.fees ?? "N/A"}",
+                                          style: const TextStyle(fontSize: 14, color: Colors.grey)),
+                                      Text("Available Slots: ${doctor.availableSlots ?? "N/A"}",
+                                          style: const TextStyle(fontSize: 14, color: Colors.grey)),
                                     ],
                                   ),
                                 ),
-                              ),
-                            ],
-                          ),
-                        ),
+                                ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.deepPurple,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                  ),
+                                  onPressed: () {
+                                    final doctorId = doctor.doctorId;
+                                    if (doctorId == null || doctorId.isEmpty) {
+                                      ScaffoldMessenger.of(context).showSnackBar(
+                                        const SnackBar(content: Text("Doctor ID is missing!")),
+                                      );
+                                      return;
+                                    }
+
+                                    final doctorBloc = context.read<DoctorBloc>();
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => BlocProvider.value(
+                                          value: doctorBloc,
+                                          child: DoctorDetailView(doctorId: doctorId),
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                  child: const Text("View more..", style: TextStyle(color: Colors.white)),
+                                ),
+                              ],
+                            ),
+                          );
+                        },
                       );
-                    },
-                  ),
-                );
-              }
-            },
+                    }
+                  },
+                ),
+              ),
+            ],
           ),
         ),
       ),
