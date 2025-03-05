@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:mobile_application_project/features/home/presentation/view_model/home_cubit.dart';
-import 'package:mobile_application_project/features/home/presentation/view_model/home_state.dart';
+import 'package:mobile_application_project/features/doctor/presentation/view/doctor_view.dart'; // Doctor page
+import 'package:mobile_application_project/features/appointment/presentation/view/appointment_view.dart'; // Appointment page
+import 'package:mobile_application_project/features/auth/presentation/view/login_view.dart';
+import 'package:mobile_application_project/features/home/presentation/view/bottom_view/account_view.dart'; // Login page
 
 class HomeView extends StatelessWidget {
   const HomeView({super.key});
@@ -17,21 +19,10 @@ class HomeView extends StatelessWidget {
         backgroundColor: Colors.purple,
         centerTitle: true,
         actions: [
-          BlocBuilder<HomeCubit, HomeState>(
-            builder: (context, state) {
-              return Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  "User: ${state.userId}",
-                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                ),
-              );
-            },
-          ),
           IconButton(
             icon: const Icon(Icons.logout),
             onPressed: () {
-              context.read<HomeCubit>().logout(context);
+              _logout(context);
             },
           ),
         ],
@@ -41,13 +32,9 @@ class HomeView extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            BlocBuilder<HomeCubit, HomeState>(
-              builder: (context, state) {
-                return Text(
-                  "Welcome To MindCare.",
-                  style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                );
-              },
+            const Text(
+              "Welcome To MindCare.",
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 20),
             const Text(
@@ -61,7 +48,7 @@ class HomeView extends StatelessWidget {
               height: 200,
               decoration: BoxDecoration(
                 image: DecorationImage(
-                  image: NetworkImage("https://your-image-url.com"), // Replace with your image URL
+                  image: AssetImage("assets/home.png"), // Local image
                   fit: BoxFit.cover,
                 ),
               ),
@@ -75,46 +62,47 @@ class HomeView extends StatelessWidget {
             ),
             const SizedBox(height: 20),
 
-            // Dummy Doctor Data
-            Expanded(
-              child: ListView(
-                children: [
-                  _buildDoctorCard("Dr. Roshan Poudel", "Ophthalmologist", "https://dummyimage.com/100x100/000/fff"), // Replace with actual image URL
-                  _buildDoctorCard("Dr. Mina Hal", "Dermatologist", "https://dummyimage.com/100x100/000/fff"), // Replace with actual image URL
-                  _buildDoctorCard("Dr. Pradeep Thapa", "Cardiologist", "https://dummyimage.com/100x100/000/fff"), // Replace with actual image URL
-                ],
+            // Doctors in a Scrollable Container (Horizontal Scroll)
+            Container(
+              height: 220, // Adjust the height for larger container
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: [
+                    _buildDoctorCard("Dr. Roshan Poudel", "Ophthalmologist", "assets/doctor1.png"),
+                    _buildDoctorCard("Dr. Mina Hal", "Dermatologist", "https://dummyimage.com/100x100/000/fff"),
+                    _buildDoctorCard("Dr. Pradeep Thapa", "Cardiologist", "https://dummyimage.com/100x100/000/fff"),
+                    _buildDoctorCard("Dr. Suman Thapa", "Pediatrician", "https://dummyimage.com/100x100/000/fff"),
+                  ],
+                ),
               ),
             ),
           ],
         ),
       ),
-      bottomNavigationBar: BlocBuilder<HomeCubit, HomeState>(
-        builder: (context, state) {
-          return BottomNavigationBar(
-            items: const <BottomNavigationBarItem>[
-              BottomNavigationBarItem(
-                icon: Icon(Icons.dashboard),
-                label: 'Dashboard',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.book),
-                label: 'Doctor',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.group),
-                label: 'Appointment',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.account_circle),
-                label: 'Account',
-              ),
-            ],
-            currentIndex: state.selectedIndex,
-            selectedItemColor: Colors.white,
-            onTap: (index) {
-              context.read<HomeCubit>().onTabTapped(index);
-            },
-          );
+      bottomNavigationBar: BottomNavigationBar(
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.dashboard),
+            label: 'Dashboard',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.book),
+            label: 'Doctor',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.group),
+            label: 'Appointment',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.account_circle),
+            label: 'Account',
+          ),
+        ],
+        currentIndex: 0, // Replace with your dynamic index if needed
+        selectedItemColor: Colors.white,
+        onTap: (index) {
+          _onBottomNavTap(context, index);
         },
       ),
     );
@@ -122,15 +110,69 @@ class HomeView extends StatelessWidget {
 
   // Function to build doctor card
   Widget _buildDoctorCard(String name, String specialty, String imageUrl) {
-    return Card(
-      margin: const EdgeInsets.only(bottom: 16),
-      child: ListTile(
-        leading: CircleAvatar(
-          backgroundImage: NetworkImage(imageUrl), // Display the image
+    return Padding(
+      padding: const EdgeInsets.only(right: 16.0),
+      child: Card(
+        child: Column(
+          children: [
+            CircleAvatar(
+              radius: 40,
+              backgroundImage: NetworkImage(imageUrl), // Display the image
+            ),
+            const SizedBox(height: 8),
+            Text(name, style: const TextStyle(fontWeight: FontWeight.bold)),
+            Text(specialty),
+          ],
         ),
-        title: Text(name, style: const TextStyle(fontWeight: FontWeight.bold)),
-        subtitle: Text(specialty),
       ),
     );
+  }
+
+  // Logout function
+  void _logout(BuildContext context) {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => LoginView(),
+      ),
+    );
+  }
+
+  // Bottom navigation handling
+  void _onBottomNavTap(BuildContext context, int index) {
+    switch (index) {
+      case 0:
+        // Dashboard page (You can navigate to a dashboard if needed)
+        break;
+      case 1:
+        // Navigate to Doctor page
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const DoctorView(),
+          ),
+        );
+        break;
+      case 2:
+        // Navigate to Appointment page
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const AppointmentView(),
+          ),
+        );
+        break;
+      case 3:
+        // Navigate to Account page
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const AccountView(),
+          ),
+        );
+        break;
+      default:
+        break;
+    }
   }
 }
