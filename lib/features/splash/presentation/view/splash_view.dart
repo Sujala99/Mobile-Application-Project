@@ -68,7 +68,7 @@ class _SplashScreenState extends State<SplashScreenView> {
 
               // Subtitle
               const Text(
-                'BEAUTY APP',
+                'Find Help and Supprot here ',
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.w400,

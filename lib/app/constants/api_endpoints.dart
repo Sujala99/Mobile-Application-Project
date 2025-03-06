@@ -14,6 +14,7 @@ class ApiEndpoints {
 
   static const String imageUrl = "http://10.0.2.2:4000/uploads/"; // Corrected
   static const String uploadImage = "users/uploadImage"; // Corrected
+  static const String getImageUrl = "$baseUrl/uploads/";
 
 // doctor routes
 

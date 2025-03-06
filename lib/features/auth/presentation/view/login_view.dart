@@ -211,8 +211,6 @@
 //   }
 // }
 
-
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -234,9 +232,6 @@ class _LoginViewState extends State<LoginView> {
   bool _isPasswordVisible = false;
   final FocusNode _usernameFocusNode = FocusNode();
   final FocusNode _passwordFocusNode = FocusNode();
-
-  final bool _rememberMe = false;
-  final _gap = const SizedBox(height: 8);
 
   @override
   void dispose() {
@@ -273,8 +268,9 @@ class _LoginViewState extends State<LoginView> {
             Navigator.pop(context);
           },
         ),
-        title: const Text('Sign In'),
+        title: const Text('MindCare'),
         centerTitle: true,
+        backgroundColor: Colors.deepPurple, // Light purple background
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -283,35 +279,36 @@ class _LoginViewState extends State<LoginView> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
+              const SizedBox(height: 20.0),
               const Text(
                 'Sign In',
                 style: TextStyle(
-                  fontSize: 28,
+                  fontSize: 24,
                   fontWeight: FontWeight.bold,
-                  color: Colors.purple,
+                  color: Colors.deepPurple, // Darker purple
                 ),
               ),
-              const SizedBox(height: 8.0),
-              const Text(
-                'Please sign in to your registered account',
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.black,
-                ),
-              ),
+              // const SizedBox(height: 8.0),
+              // const Text(
+              //   'Please sign in to your registered account',
+              //   style: TextStyle(
+              //     fontSize: 16,
+              //     color: Colors.black,
+              //   ),
+              // ),
               const SizedBox(height: 20.0),
               TextFormField(
                 focusNode: _usernameFocusNode,
                 controller: _usernameController,
-                decoration: const InputDecoration(
-                  prefixIcon: Icon(Icons.person),
+                decoration: InputDecoration(
+                  prefixIcon: const Icon(Icons.person),
                   labelText: 'Username',
                   border: OutlineInputBorder(
                     borderSide: BorderSide.none,
-                    borderRadius: BorderRadius.all(Radius.circular(8.0)),
+                    borderRadius: BorderRadius.circular(8.0),
                   ),
                   filled: true,
-                  fillColor: Color.fromARGB(255, 236, 233, 233),
+                  fillColor: Colors.purple[50], // Lighter purple
                 ),
                 validator: _validateUsername,
               ),
@@ -327,7 +324,7 @@ class _LoginViewState extends State<LoginView> {
                       _isPasswordVisible
                           ? Icons.visibility
                           : Icons.visibility_off,
-                      color: Colors.black,
+                      color: Colors.purple[800], // Darker purple
                     ),
                     onPressed: () {
                       setState(() {
@@ -336,12 +333,12 @@ class _LoginViewState extends State<LoginView> {
                     },
                   ),
                   labelText: 'Password',
-                  border: const OutlineInputBorder(
+                  border: OutlineInputBorder(
                     borderSide: BorderSide.none,
-                    borderRadius: BorderRadius.all(Radius.circular(8.0)),
+                    borderRadius: BorderRadius.circular(8.0),
                   ),
                   filled: true,
-                  fillColor: const Color.fromARGB(255, 236, 233, 233),
+                  fillColor: Colors.purple[50], // Lighter purple
                 ),
                 validator: _validatePassword,
               ),
@@ -361,7 +358,7 @@ class _LoginViewState extends State<LoginView> {
                     }
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.purple,
+                    backgroundColor: Colors.purple[800], // Darker purple
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8.0),
                     ),
@@ -389,7 +386,7 @@ class _LoginViewState extends State<LoginView> {
                     child: const Text(
                       'Reset here',
                       style: TextStyle(
-                        color: Colors.purple,
+                        color: Colors.deepPurple, // Darker purple
                       ),
                     ),
                   ),
@@ -408,14 +405,14 @@ class _LoginViewState extends State<LoginView> {
                         );
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color.fromARGB(255, 236, 233, 233),
+                    backgroundColor: Colors.purple[50], // Lighter purple
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8.0),
                     ),
                   ),
                   child: const Text(
                     'CREATE ACCOUNT',
-                    style: TextStyle(color: Colors.purple),
+                    style: TextStyle(color: Colors.deepPurple), // Darker purple
                   ),
                 ),
               ),

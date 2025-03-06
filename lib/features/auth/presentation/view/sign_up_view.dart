@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
@@ -26,6 +25,7 @@ class _SignUpViewState extends State<SignUpView> {
   final _dobController = TextEditingController();
   bool _isPasswordVisible = false;
   String? _selectedGender;
+  DateTime? _selectedDate;
 
   checkCameraPermission() async {
     if (await Permission.camera.request().isRestricted ||
@@ -118,6 +118,21 @@ class _SignUpViewState extends State<SignUpView> {
     return null;
   }
 
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: _selectedDate ?? DateTime.now(),
+      firstDate: DateTime(1900),
+      lastDate: DateTime(2101),
+    );
+    if (picked != null && picked != _selectedDate) {
+      setState(() {
+        _selectedDate = picked;
+        _dobController.text = picked.toLocal().toString().split(' ')[0];
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -128,8 +143,9 @@ class _SignUpViewState extends State<SignUpView> {
             Navigator.pop(context);
           },
         ),
-        title: const Text('Sign Up', style: TextStyle(color: Colors.black)),
+        title: const Text('MindCare', style: TextStyle(color: Colors.black)),
         centerTitle: true,
+        backgroundColor: Colors.deepPurple, // Light purple background
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -144,9 +160,9 @@ class _SignUpViewState extends State<SignUpView> {
                   child: Text(
                     'Create Account',
                     style: TextStyle(
-                      fontSize: 28,
+                      fontSize: 24,
                       fontWeight: FontWeight.bold,
-                      color: Colors.purple,
+                      color: Colors.purple, // Darker purple
                     ),
                   ),
                 ),
@@ -192,6 +208,7 @@ class _SignUpViewState extends State<SignUpView> {
                     },
                     child: CircleAvatar(
                       radius: 50,
+                      backgroundColor: Colors.purple[50], // Lighter purple
                       backgroundImage: _img != null
                           ? FileImage(_img!)
                           : const AssetImage('assets/images/profile.png')
@@ -199,6 +216,8 @@ class _SignUpViewState extends State<SignUpView> {
                     ),
                   ),
                 ),
+                const SizedBox(height: 10),
+                const Text('Profile Picture'),
                 const SizedBox(height: 20.0),
                 _buildTextField(
                   controller: _fullnameController,
@@ -214,15 +233,36 @@ class _SignUpViewState extends State<SignUpView> {
                 ),
                 _buildTextField(
                   controller: _passwordController,
-                  hintText: 'password',
+                  hintText: 'Password',
                   validator: _validatePassword,
-                  prefixIcon: const Icon(Icons.password),
+                  prefixIcon: const Icon(Icons.lock),
+                  suffixIcon: IconButton(
+                    icon: Icon(
+                      _isPasswordVisible
+                          ? Icons.visibility
+                          : Icons.visibility_off,
+                      color: Colors.purple[800], // Darker purple
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        _isPasswordVisible = !_isPasswordVisible;
+                        _passwordController.text =
+                            _isPasswordVisible
+                                ? _passwordController.text
+                                : _passwordController.text.split('').reversed.join().replaceAll(RegExp(r"[^a-zA-Z0-9]"), "");
+                      });
+                    },
+                  ),
                 ),
                 _buildTextField(
                   controller: _dobController,
                   hintText: 'Date of Birth',
                   validator: _validateDob,
                   prefixIcon: const Icon(Icons.calendar_today),
+                  suffixIcon: IconButton(
+                    icon: const Icon(Icons.calendar_today),
+                    onPressed: () => _selectDate(context),
+                  ),
                 ),
                 _buildTextField(
                   controller: _addressController,
@@ -242,45 +282,90 @@ class _SignUpViewState extends State<SignUpView> {
                   validator: _validateEmail,
                   prefixIcon: const Icon(Icons.email),
                 ),
-                DropdownButtonFormField<String>(
-                  value: _selectedGender,
-                  items: ['Male', 'Female', 'Other']
-                      .map((gender) => DropdownMenuItem(
-                            value: gender,
-                            child: Text(gender),
-                          ))
-                      .toList(),
-                  onChanged: (value) => setState(() => _selectedGender = value),
-                  decoration: const InputDecoration(
-                    prefixIcon: Icon(Icons.wc),
-                    labelText: 'Gender',
-                    border: OutlineInputBorder(),
+                _buildTextField(
+                  controller: TextEditingController(text: _selectedGender ?? ''),
+                  hintText: 'Gender',
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Gender is required';
+                    }
+                    return null;
+                  },
+                  prefixIcon: const Icon(Icons.wc),
+                  suffixIcon: DropdownButton<String>(
+                    value: _selectedGender,
+                    items: ['Male', 'Female', 'Other']
+                        .map((gender) => DropdownMenuItem<String>(
+                              value: gender,
+                              child: Text(gender),
+                            ))
+                        .toList(),
+                    onChanged: (value) {
+                      setState(() {
+                        _selectedGender = value;
+                      });
+                    },
+                    icon: const Icon(Icons.arrow_drop_down),
+                    iconEnabledColor: Colors.purple[800], // Darker purple
+                    iconDisabledColor: Colors.purple[800], // Darker purple
                   ),
                 ),
                 const SizedBox(height: 24.0),
-                ElevatedButton(
-                  onPressed: () {
-                    if (_formKey.currentState!.validate()) {
-                      final registerState = context.read<RegisterBloc>().state;
-                      context.read<RegisterBloc>().add(
-                            RegisterUserEvent(
-                              context: context,
-                              fullname: _fullnameController.text,
-                              username: _usernameController.text,
-                              email: _emailController.text,
-                              contactNo: _contactNoController.text,
-                              password: _passwordController.text,
-                              address: _addressController.text,
-                              dob: _dobController.text.isNotEmpty
-                                  ? DateTime.tryParse(_dobController.text)
-                                  : null,
-                              gender: _selectedGender ?? '',
-                              image: registerState.imageName,
-                            ),
-                          );
-                    }
-                  },
-                  child: const Text('REGISTER'),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      if (_formKey.currentState!.validate()) {
+                        final registerState = context.read<RegisterBloc>().state;
+                        context.read<RegisterBloc>().add(
+                              RegisterUserEvent(
+                                context: context,
+                                fullname: _fullnameController.text,
+                                username: _usernameController.text,
+                                email: _emailController.text,
+                                contactNo: _contactNoController.text,
+                                password: _passwordController.text,
+                                address: _addressController.text,
+                                dob: _selectedDate,
+                                gender: _selectedGender ?? '',
+                                image: registerState.imageName,
+                              ),
+                            );
+                      }
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.purple[800], // Darker purple
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                    ),
+                    child: const Text(
+                      'REGISTER',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 8.0),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(builder: (context) => const LoginView()),
+                      );
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.purple[50], // Lighter purple
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                    ),
+                    child: const Text(
+                      'LOGIN',
+                      style: TextStyle(color: Colors.purple), // Darker purple
+                    ),
+                  ),
                 ),
               ],
             ),
@@ -302,7 +387,7 @@ class _SignUpViewState extends State<SignUpView> {
       padding: const EdgeInsets.all(10.0),
       child: Container(
         decoration: BoxDecoration(
-          color: const Color.fromARGB(255, 236, 233, 233),
+          color: Colors.purple[50], // Lighter purple
           borderRadius: BorderRadius.circular(10),
         ),
         child: TextFormField(
