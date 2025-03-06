@@ -12,6 +12,7 @@ import 'package:mobile_application_project/features/doctor/domain/repository/doc
 import 'package:mobile_application_project/features/doctor/domain/use_case/get_all_doctor_usecase.dart';
 import 'package:mobile_application_project/features/doctor/domain/use_case/get_doctor_details_usecase.dart';
 import 'package:mobile_application_project/features/doctor/presentation/view_model/doctor/doctor_bloc.dart';
+import 'package:mobile_application_project/features/onboarding/presentation/view_model/onboarding_cubit.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../core/network/api_service.dart';
@@ -44,7 +45,7 @@ Future<void> initDependencies() async {
   _initBookingDependencies();
   _initLoginDependencies();
   _initSplashScreenDependencies();
-  // _initOnboardingScreenDependencies();
+  _initOnboardingScreenDependencies();
 }
 
 /// *Initialize Shared Preferences*
@@ -188,5 +189,10 @@ void _initBookingDependencies() {
 
 /// *Initialize Splash Screen Dependencies*
 void _initSplashScreenDependencies() {
-  getIt.registerFactory<SplashCubit>(() => SplashCubit(getIt<LoginBloc>()));
+  getIt.registerFactory<SplashCubit>(() => SplashCubit());
+}
+
+/// *Initialize Splash Screen Dependencies*
+void _initOnboardingScreenDependencies() {
+  getIt.registerFactory<OnboardingCubit>(() => OnboardingCubit());
 }

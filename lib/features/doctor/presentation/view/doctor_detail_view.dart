@@ -1,6 +1,16 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mobile_application_project/features/booking/presentation/view/booking_form_view.dart';
+import 'package:mobile_application_project/features/doctor/presentation/view_model/doctor/doctor_bloc.dart';
+import 'package:mobile_application_project/features/doctor/presentation/view_model/doctor/doctor_event.dart';
+import 'package:mobile_application_project/features/doctor/presentation/view_model/doctor/doctor_state.dart';
+
+
+
 class DoctorDetailView extends StatelessWidget {
   final String doctorId;
-  final String baseUrl = "http://10.0.2.2:9000/public/uploads/";
+  final String baseUrl = "http://10.0.2.2:4000/uploads/";  // Update base URL
+
 
   const DoctorDetailView({Key? key, required this.doctorId}) : super(key: key);
 
@@ -13,9 +23,10 @@ class DoctorDetailView extends StatelessWidget {
       appBar: AppBar(
         title: const Text(
           "Doctor Details",
+
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
         ),
-        backgroundColor: Colors.teal,
+        backgroundColor: Colors.deepPurple,
         elevation: 0,
       ),
       body: BlocBuilder<DoctorBloc, DoctorState>(
@@ -41,9 +52,10 @@ class DoctorDetailView extends StatelessWidget {
           final doctor = state.selectedDoctor!;
 
           // Constructing the full image URL
-          String fullImageUrl = doctor.image?.isNotEmpty == true
-              ? "$baseUrl${doctor.image}"
-              : "https://via.placeholder.com/150"; // Placeholder image
+          String fullImageUrl = (doctor.image != null && doctor.image!.isNotEmpty)
+    ? "$baseUrl${doctor.image}"  // Construct full image URL
+    : "https://via.placeholder.com/150";
+// Placeholder image
 
           return SingleChildScrollView(
             padding: const EdgeInsets.all(20.0),
@@ -65,7 +77,7 @@ class DoctorDetailView extends StatelessWidget {
                         child: Icon(
                           Icons.image_not_supported,
                           size: 50,
-                          color: Colors.grey,
+                          color: Colors.deepPurple,
                         ),
                       ),
                     ),
@@ -164,7 +176,7 @@ class DoctorDetailView extends StatelessWidget {
                           vertical: 16, horizontal: 32),
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10)),
-                      backgroundColor: Colors.teal,
+                      backgroundColor: Colors.deepPurple,
                     ),
                     child: const Text(
                       "Book Appointment",

@@ -1,6 +1,9 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
+import 'package:mobile_application_project/features/appointment/presentation/view/appointment_view.dart';
 import 'package:mobile_application_project/features/doctor/presentation/view/doctor_view.dart';
+import 'package:mobile_application_project/features/home/presentation/view/home_view.dart';
+import 'package:mobile_application_project/features/home/presentation/view/profile_view.dart';
 
 class HomeState extends Equatable {
   final int selectedIndex;
@@ -17,10 +20,10 @@ class HomeState extends Equatable {
     return HomeState(
       selectedIndex: 0,
       views: [
-        const Center(child: Text('Dashboard')),
+        const HomeView(),
         const DoctorView(), // Use the actual Doctor View here
-        const Center(child: Text('Appointment')),
-        const Center(child: Text('Account')),
+        const AppointmentView(),
+         ProfilePage()
       ],
       userId: '',
     );
